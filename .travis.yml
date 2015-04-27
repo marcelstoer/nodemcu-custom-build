@@ -1,4 +1,5 @@
 language: cpp
+
 before_install:
 - git clone --depth=50 --branch=master git://github.com/nodemcu/nodemcu-firmware.git
   nodemcu-firmware
@@ -7,30 +8,30 @@ before_install:
 - cd nodemcu-firmware
 - ls -altr
 - sudo apt-get install -y python-serial srecord
+
 install:
-- wget https://github.com/GeorgeHahn/nodemcu-firmware/raw/travis/tools/esp-open-sdk.tar.gz
-  -O tools/esp-open-sdk.tar.gz
+- wget https://github.com/GeorgeHahn/nodemcu-firmware/raw/travis/tools/esp-open-sdk.tar.gz -O tools/esp-open-sdk.tar.gz
 - tar -zxvf tools/esp-open-sdk.tar.gz
 - export PATH=$PATH:$PWD/esp-open-sdk/sdk:$PWD/esp-open-sdk/xtensa-lx106-elf/bin
 script:
 - make all
 - cd bin/
 - file_name_float="nodemcu_float_${TRAVIS_TAG}.bin"
-- srec_cat  -output ${file_name_float} -binary 0x00000.bin -binary -fill 0xff 0x00000
-  0x10000 0x10000.bin -binary -offset 0x10000
+- srec_cat  -output ${file_name_float} -binary 0x00000.bin -binary -fill 0xff 0x00000 0x10000 0x10000.bin -binary -offset 0x10000
 - cd ../
 - make clean
 - make EXTRA_CCFLAGS="-DLUA_NUMBER_INTEGRAL"
 - cd bin/
 - file_name_integer="nodemcu_integer_${TRAVIS_TAG}.bin"
-- srec_cat -output ${file_name_integer} -binary 0x00000.bin -binary -fill 0xff 0x00000
-  0x10000 0x10000.bin -binary -offset 0x10000
+- srec_cat -output ${file_name_integer} -binary 0x00000.bin -binary -fill 0xff 0x00000 0x10000 0x10000.bin -binary -offset 0x10000
+
 after_success:
 - cp "$TRAVIS_BUILD_DIR/bin/${file_name_float}" app
 - cp "$TRAVIS_BUILD_DIR/bin/${file_name_integer}" app
 - git config credential.helper "store --file=.git/credentials"
 - echo "https://${GH_TOKEN}:@github.com" > .git/credentials
 - git push origin
+
 env:
   global:
     secure: Rrmc8v18VXbZWjWO5THqrDHc2l4qM3503Ewb1qgRp8+K3Xgf358+sYdb9UTfl/9sVwboD7IgLELriAwE0cBG7l+RCjXkdLVK12pQXR2GeGuRdhAh8aj1Ia7EzJuc8qKEQq5zCdUBbfQ8YR+S3Ly8DrgJO4kLWbLReojB+2fg/dc=
