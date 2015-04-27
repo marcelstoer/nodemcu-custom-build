@@ -1,8 +1,7 @@
 language: cpp
 
 before_install:
-- git clone --depth=50 --branch=master git://github.com/nodemcu/nodemcu-firmware.git
-  nodemcu-firmware
+- git clone --depth=50 --branch=master git://github.com/nodemcu/nodemcu-firmware.git nodemcu-firmware
 - cp -R app nodemcu-firmware/
 - cat nodemcu-firmware/app/include/user_modules.h
 - cd nodemcu-firmware
@@ -30,6 +29,7 @@ after_success:
 - pwd
 - cp "$TRAVIS_BUILD_DIR/nodemcu-firmware/bin/${file_name_float}" .
 - cp "$TRAVIS_BUILD_DIR/nodemcu-firmware/bin/${file_name_integer}" .
+- rm -fr "$TRAVIS_BUILD_DIR/nodemcu-firmware"
 - git config credential.helper "store --file=.git/credentials"
 - echo "https://${GH_TOKEN}:@github.com" > .git/credentials
 - git add ${file_name_float} ${file_name_integer}
