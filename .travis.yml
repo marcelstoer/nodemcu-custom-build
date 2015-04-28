@@ -30,6 +30,7 @@ after_success:
 - cp "$TRAVIS_BUILD_DIR/nodemcu-firmware/bin/${file_name_float}" .
 - cp "$TRAVIS_BUILD_DIR/nodemcu-firmware/bin/${file_name_integer}" .
 - rm -fr "$TRAVIS_BUILD_DIR/nodemcu-firmware"
+- ls -al
 - git config credential.helper "store --file=.git/credentials"
 - echo "https://${GH_TOKEN}:@github.com" > .git/credentials
 - git add ${file_name_float} ${file_name_integer}
@@ -38,4 +39,4 @@ after_success:
 
 env:
   global:
-    secure: Rrmc8v18VXbZWjWO5THqrDHc2l4qM3503Ewb1qgRp8+K3Xgf358+sYdb9UTfl/9sVwboD7IgLELriAwE0cBG7l+RCjXkdLVK12pQXR2GeGuRdhAh8aj1Ia7EzJuc8qKEQq5zCdUBbfQ8YR+S3Ly8DrgJO4kLWbLReojB+2fg/dc=
+    secure: "AZIj7u86av/GfbAQO2ln/3302vPQYLa2AdusPHZA0slVtHWMK/q8TZcqDwx6U49/ps/z5d7dc6Py4L9NgmiXx9PE6846RTM1OTqOWvE/Aw8Ome2Cs7sCnlzpPUvH6VIufqqa0jHgBjWv1YL1yEZufSjVl/Ih+sypSLl03GJ+uII="
