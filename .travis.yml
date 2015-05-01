@@ -16,13 +16,13 @@ install:
 script:
 - make all
 - cd bin/
-- file_name_float="nodemcu_float.bin"
+- file_name_float=$TRAVIS_BRANCH"-nodemcu_float.bin"
 - srec_cat  -output ${file_name_float} -binary 0x00000.bin -binary -fill 0xff 0x00000 0x10000 0x10000.bin -binary -offset 0x10000
 - cd ../
 - make clean
 - make EXTRA_CCFLAGS="-DLUA_NUMBER_INTEGRAL"
 - cd bin/
-- file_name_integer="nodemcu_integer.bin"
+- file_name_integer=$TRAVIS_BRANCH"-nodemcu_integer.bin"
 - srec_cat -output ${file_name_integer} -binary 0x00000.bin -binary -fill 0xff 0x00000 0x10000 0x10000.bin -binary -offset 0x10000
 
 after_success:
@@ -33,18 +33,19 @@ after_success:
 - cp "$TRAVIS_BUILD_DIR/nodemcu-firmware/bin/${file_name_integer}" .
 - rm -fr "$TRAVIS_BUILD_DIR/nodemcu-firmware"
 - ls -al
-- git config user.name "${GIT_NAME}"
-- git config user.email "${GIT_EMAIL}"
-- git config credential.helper "store --file=.git/credentials"
-- echo "https://${GH_TOKEN}:@github.com" > .git/credentials
+#- git config user.name "${GIT_NAME}"
+#- git config user.email "${GIT_EMAIL}"
+#- git config credential.helper "store --file=.git/credentials"
+#- echo "https://${GH_TOKEN}:@github.com" > .git/credentials
 # re-attach branch that was detached sometime during the build ('git clone' of the nodemcu repo?)
-- git checkout $TRAVIS_BRANCH
-- git add ${file_name_float} ${file_name_integer}
-- git commit -m "Add compiled NodeMCU firmware binaries"
-- git status
+#- git checkout $TRAVIS_BRANCH
+#- git add ${file_name_float} ${file_name_integer}
+#- git commit -m "Add compiled NodeMCU firmware binaries"
+#- git status
 # Travis uses git://<repo> to checkout but you can't push to git:// resources
-- git push https://github.com/marcelstoer/nodemcu-custom-build.git
+#- git push https://github.com/marcelstoer/nodemcu-custom-build.git
+curl -T "{${file_name_float},${file_name_integer}}" -u ${FTP_USER}:${FTP_PASSWORD} --ftp-ssl -k ftp://www.frightanic.com/
 
 env:
   global:
-    secure: "AZIj7u86av/GfbAQO2ln/3302vPQYLa2AdusPHZA0slVtHWMK/q8TZcqDwx6U49/ps/z5d7dc6Py4L9NgmiXx9PE6846RTM1OTqOWvE/Aw8Ome2Cs7sCnlzpPUvH6VIufqqa0jHgBjWv1YL1yEZufSjVl/Ih+sypSLl03GJ+uII="
+    secure: "r3EKLjmOgWJzTECiTzPvE4Cz/QrO1Ll0ToeXAX2Lf/4BCBDL6V3cUUaQkXJAFKLiSxDIKb+sXYm3k/0JoSv5/ljlIoz1HJOAgwcNaM+dAfhI0/rS7RqZueSeK+F+UhfJ5CsN5hd+GvQ8bIT5+mXmU+ssL7RsJEx7YFvFtlrmosY="
