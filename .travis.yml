@@ -44,7 +44,7 @@ after_success:
 #- git status
 # Travis uses git://<repo> to checkout but you can't push to git:// resources
 #- git push https://github.com/marcelstoer/nodemcu-custom-build.git
-curl -T "{${file_name_float},${file_name_integer}}" -u ${FTP_USER}:${FTP_PASSWORD} --ftp-ssl -k ftp://www.frightanic.com/
+- curl -T "{${file_name_float},${file_name_integer}}" -u ${FTP_USER}:${FTP_PASSWORD} --ftp-ssl -k ftp://www.frightanic.com/
 
 env:
   global:
