@@ -3,7 +3,7 @@ language: cpp
 before_install:
 - git clone --depth=50 --branch=master git://github.com/nodemcu/nodemcu-firmware.git nodemcu-firmware
 # copy the custom NodeMCU modules config to the cloned repo
-- cp -R app nodemcu-firmware/
+- cp user_modules.h nodemcu-firmware/app/include/
 - cat nodemcu-firmware/app/include/user_modules.h
 - cd nodemcu-firmware
 - ls -altr
@@ -49,3 +49,4 @@ after_success:
 env:
   global:
     secure: "r3EKLjmOgWJzTECiTzPvE4Cz/QrO1Ll0ToeXAX2Lf/4BCBDL6V3cUUaQkXJAFKLiSxDIKb+sXYm3k/0JoSv5/ljlIoz1HJOAgwcNaM+dAfhI0/rS7RqZueSeK+F+UhfJ5CsN5hd+GvQ8bIT5+mXmU+ssL7RsJEx7YFvFtlrmosY="
+
