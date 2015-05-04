@@ -1,7 +1,12 @@
 language: cpp
 
 before_install:
-- git clone --depth=50 --branch=master git://github.com/nodemcu/nodemcu-firmware.git nodemcu-firmware
+- X_EMAIL=$(grep -E '// email=(.*)' user_modules.h | cut -c 10-)
+- X_BRANCH=$(grep -E '// branch=(.*)' user_modules.h | cut -c 11-)
+
+- curl http://frightanic.com/nodemcu-custom-build/hook.php?event=start&recipient=$X_EMAIL
+
+- git clone --depth=50 --branch=$X_BRANCH git://github.com/nodemcu/nodemcu-firmware.git nodemcu-firmware
 # copy the custom NodeMCU modules config to the cloned repo
 - cp user_modules.h nodemcu-firmware/app/include/
 - cat nodemcu-firmware/app/include/user_modules.h
@@ -45,8 +50,21 @@ after_success:
 # Travis uses git://<repo> to checkout but you can't push to git:// resources
 #- git push https://github.com/marcelstoer/nodemcu-custom-build.git
 - curl -T "{${file_name_float},${file_name_integer}}" -u ${FTP_USER}:${FTP_PASSWORD} --ftp-ssl -k ftp://82.195.224.128
+- curl http://frightanic.com/nodemcu-custom-build/hook.php?event=success&recipient=$X_EMAIL&artifacts=${file_name_float},${file_name_integer}
 
 env:
   global:
     secure: "r3EKLjmOgWJzTECiTzPvE4Cz/QrO1Ll0ToeXAX2Lf/4BCBDL6V3cUUaQkXJAFKLiSxDIKb+sXYm3k/0JoSv5/ljlIoz1HJOAgwcNaM+dAfhI0/rS7RqZueSeK+F+UhfJ5CsN5hd+GvQ8bIT5+mXmU+ssL7RsJEx7YFvFtlrmosY="
 
+notifications:
+  email:
+    recipients:
+      - nodemcu-custom-build@frightanic.com
+    on_success: never
+    on_failure: always
+  webhooks:
+      urls:
+        - http://frightanic.com/nodemcu-custom-build/hook.php?event=failure&recipient=$X_EMAIL
+      on_success: never
+      on_failure: always
+      on_start: never
