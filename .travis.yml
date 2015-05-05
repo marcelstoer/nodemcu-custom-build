@@ -3,12 +3,8 @@ language: cpp
 before_install:
 - X_EMAIL=$(grep -E '// email=(.*)' user_modules.h | cut -c 10-)
 - X_BRANCH=$(grep -E '// branch=(.*)' user_modules.h | cut -c 11-)
-- echo $X_EMAIL, $X_BRANCH
-- echo 'http://frightanic.com/nodemcu-custom-build/hook.php?event=start&recipient='$X_EMAIL
 - curl 'http://frightanic.com/nodemcu-custom-build/hook.php?event=start&recipient='$X_EMAIL
-
 - git clone --depth=50 --branch=$X_BRANCH git://github.com/nodemcu/nodemcu-firmware.git nodemcu-firmware
-# copy the custom NodeMCU modules config to the cloned repo
 - cp user_modules.h nodemcu-firmware/app/include/
 - cat nodemcu-firmware/app/include/user_modules.h
 - cd nodemcu-firmware
@@ -51,7 +47,6 @@ after_success:
 # Travis uses git://<repo> to checkout but you can't push to git:// resources
 #- git push https://github.com/marcelstoer/nodemcu-custom-build.git
 - curl -T "{${file_name_float},${file_name_integer}}" -u ${FTP_USER}:${FTP_PASSWORD} --ftp-ssl -k ftp://82.195.224.128
-- echo 'http://frightanic.com/nodemcu-custom-build/hook.php?event=success&recipient='$X_EMAIL'&artifacts='${file_name_float},${file_name_integer}
 - curl 'http://frightanic.com/nodemcu-custom-build/hook.php?event=success&recipient='$X_EMAIL'&artifacts='${file_name_float},${file_name_integer}
 
 env:
