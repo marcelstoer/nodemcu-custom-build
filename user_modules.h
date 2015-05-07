@@ -1,5 +1,5 @@
 // email=fhisg@excite.com
-// branch=dev096
+// branch=master
 #ifndef __USER_MODULES_H__
 #define __USER_MODULES_H__
 
@@ -22,6 +22,8 @@
 #define LUA_USE_MODULES_NET
 #define LUA_USE_MODULES_TMR
 #define LUA_USE_MODULES_UART
+#define LUA_USE_MODULES_OW
+#define LUA_USE_MODULES_BIT
 #define LUA_USE_MODULES_MQTT
 
 #endif /* LUA_USE_MODULES */
