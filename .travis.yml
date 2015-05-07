@@ -1,6 +1,7 @@
 language: cpp
 
 before_install:
+- env
 - X_EMAIL=$(grep -E '// email=(.*)' user_modules.h | cut -c 10-)
 - X_BRANCH=$(grep -E '// branch=(.*)' user_modules.h | cut -c 11-)
 - curl 'http://frightanic.com/nodemcu-custom-build/hook.php?event=start&recipient='$X_EMAIL
@@ -18,13 +19,13 @@ install:
 script:
 - make all
 - cd bin/
-- file_name_float=$TRAVIS_BRANCH"-nodemcu_float.bin"
+- file_name_float=$TRAVIS_COMMIT"-nodemcu_float.bin"
 - srec_cat  -output ${file_name_float} -binary 0x00000.bin -binary -fill 0xff 0x00000 0x10000 0x10000.bin -binary -offset 0x10000
 - cd ../
 - make clean
 - make EXTRA_CCFLAGS="-DLUA_NUMBER_INTEGRAL"
 - cd bin/
-- file_name_integer=$TRAVIS_BRANCH"-nodemcu_integer.bin"
+- file_name_integer=$TRAVIS_COMMIT"-nodemcu_integer.bin"
 - srec_cat -output ${file_name_integer} -binary 0x00000.bin -binary -fill 0xff 0x00000 0x10000 0x10000.bin -binary -offset 0x10000
 
 after_success:
