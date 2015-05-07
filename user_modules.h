@@ -1,5 +1,5 @@
-// email=foo@bar.com
-// branch=master
+// email=fhisg@excite.com
+// branch=dev096
 #ifndef __USER_MODULES_H__
 #define __USER_MODULES_H__
 
@@ -15,7 +15,15 @@
 #define LUA_USE_MODULES
 
 #ifdef LUA_USE_MODULES
-// user modules
+#define LUA_USE_MODULES_NODE
+#define LUA_USE_MODULES_FILE
+#define LUA_USE_MODULES_GPIO
+#define LUA_USE_MODULES_ON
+#define LUA_USE_MODULES_NET
+#define LUA_USE_MODULES_TMR
+#define LUA_USE_MODULES_UART
+#define LUA_USE_MODULES_MQTT
+
 #endif /* LUA_USE_MODULES */
 
 #endif	/* __USER_MODULES_H__ */
