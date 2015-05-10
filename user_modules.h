@@ -1,5 +1,5 @@
-// email=esp8266@airetraffic.com
-// branch=master
+// email=besitzeruf@gmail.com
+// branch=dev096
 #ifndef __USER_MODULES_H__
 #define __USER_MODULES_H__
 
@@ -20,6 +20,9 @@
 #define LUA_USE_MODULES_GPIO
 #define LUA_USE_MODULES_WIFI
 #define LUA_USE_MODULES_NET
+#define LUA_USE_MODULES_PWM
+#define LUA_USE_MODULES_TMR
+#define LUA_USE_MODULES_UART
 
 #endif /* LUA_USE_MODULES */
 
