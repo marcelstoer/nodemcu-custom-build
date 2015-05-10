@@ -7,7 +7,6 @@ before_install:
 - modules_array=(`echo $X_MODULES | tr "," "\n"`)
 - X_NUMBER_OF_MODULES=${#modules_array[@]}
 - env
-- getTimestamp() { date +"%Y-%m-%d-%H-%M-%S"; }
 - curl 'http://frightanic.com/nodemcu-custom-build/hook.php?event=start&recipient='$X_EMAIL
 - git clone --depth=50 --branch=$X_BRANCH git://github.com/nodemcu/nodemcu-firmware.git nodemcu-firmware
 - cp user_modules.h nodemcu-firmware/app/include/
@@ -23,14 +22,15 @@ install:
 script:
 - make all
 - cd bin/
-- base_file_name="nodemcu-"$X_BRANCH"-"$X_NUMBER_OF_MODULES"-modules"
-- file_name_float=$base_file_name"-"$getTimestamp"-float.bin"
+- timestamp=$(date "+%Y-%m-%d-%H-%M-%S")
+- base_file_name="nodemcu-"$X_BRANCH"-"$X_NUMBER_OF_MODULES"-modules-"$timestamp
+- file_name_float=$base_file_name"-float.bin"
 - srec_cat  -output ${file_name_float} -binary 0x00000.bin -binary -fill 0xff 0x00000 0x10000 0x10000.bin -binary -offset 0x10000
 - cd ../
 - make clean
 - make EXTRA_CCFLAGS="-DLUA_NUMBER_INTEGRAL"
 - cd bin/
-- file_name_integer=$base_file_name"-"$getTimestamp"-integer.bin"
+- file_name_integer=$base_file_name"-integer.bin"
 - srec_cat -output ${file_name_integer} -binary 0x00000.bin -binary -fill 0xff 0x00000 0x10000 0x10000.bin -binary -offset 0x10000
 
 after_success:
