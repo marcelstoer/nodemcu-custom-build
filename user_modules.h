@@ -1,5 +1,6 @@
-// email=foo@bar.com
+// email=msr@netcetera.ch
 // branch=master
+// modules=node,file,gpio,wifi,net,tmr,uart
 #ifndef __USER_MODULES_H__
 #define __USER_MODULES_H__
 
@@ -15,7 +16,14 @@
 #define LUA_USE_MODULES
 
 #ifdef LUA_USE_MODULES
-// user modules
+#define LUA_USE_MODULES_NODE
+#define LUA_USE_MODULES_FILE
+#define LUA_USE_MODULES_GPIO
+#define LUA_USE_MODULES_WIFI
+#define LUA_USE_MODULES_NET
+#define LUA_USE_MODULES_TMR
+#define LUA_USE_MODULES_UART
+
 #endif /* LUA_USE_MODULES */
 
 #endif	/* __USER_MODULES_H__ */
