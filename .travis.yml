@@ -4,7 +4,7 @@ before_install:
 - X_EMAIL=$(grep -E '// email=(.*)' user_modules.h | cut -c 10-)
 - X_BRANCH=$(grep -E '// branch=(.*)' user_modules.h | cut -c 11-)
 - X_MODULES=$(grep -E '// modules=(.*)' user_modules.h | cut -c 12-)
-- IFS=: read -a modules_array <<< "$X_MODULES"
+- modules_array=(`echo $X_MODULES | tr "," "\n"`)
 - X_NUMBER_OF_MODULES=${#modules_array[@]}
 - env
 - getTimestamp() {date +"%Y-%m-%d-%H-%M-%S"}
@@ -24,13 +24,13 @@ script:
 - make all
 - cd bin/
 - base_file_name="nodemcu-"$X_BRANCH"-"$X_NUMBER_OF_MODULES"-modules"
-- file_name_float=$base_file_name"-"$getTimestamp"-"float.bin"
+- file_name_float=$base_file_name"-"$getTimestamp"-float.bin"
 - srec_cat  -output ${file_name_float} -binary 0x00000.bin -binary -fill 0xff 0x00000 0x10000 0x10000.bin -binary -offset 0x10000
 - cd ../
 - make clean
 - make EXTRA_CCFLAGS="-DLUA_NUMBER_INTEGRAL"
 - cd bin/
-- file_name_integer=$base_file_name"-"$getTimestamp"-"integer.bin"
+- file_name_integer=$base_file_name"-"$getTimestamp"-integer.bin"
 - srec_cat -output ${file_name_integer} -binary 0x00000.bin -binary -fill 0xff 0x00000 0x10000 0x10000.bin -binary -offset 0x10000
 
 after_success:
