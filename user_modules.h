@@ -1,5 +1,5 @@
-// email=Terry@ellisons.org.uk
-// branch=dev096
+// email=esp8266@airetraffic.com
+// branch=master
 #ifndef __USER_MODULES_H__
 #define __USER_MODULES_H__
 
@@ -21,9 +21,9 @@
 #define LUA_USE_MODULES_WIFI
 #define LUA_USE_MODULES_NET
 #define LUA_USE_MODULES_TMR
+#define LUA_USE_MODULES_ADC
 #define LUA_USE_MODULES_UART
-#define LUA_USE_MODULES_OW
-#define LUA_USE_MODULES_CJSON
+#define LUA_USE_MODULES_MQTT
 
 #endif /* LUA_USE_MODULES */
 
