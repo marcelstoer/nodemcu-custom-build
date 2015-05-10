@@ -6,7 +6,6 @@ before_install:
 - X_MODULES=$(grep -E '// modules=(.*)' user_modules.h | cut -c 12-)
 - modules_array=(`echo $X_MODULES | tr "," "\n"`)
 - X_NUMBER_OF_MODULES=${#modules_array[@]}
-- env
 - curl 'http://frightanic.com/nodemcu-custom-build/hook.php?event=start&recipient='$X_EMAIL
 - git clone --depth=50 --branch=$X_BRANCH git://github.com/nodemcu/nodemcu-firmware.git nodemcu-firmware
 - cp user_modules.h nodemcu-firmware/app/include/
@@ -41,7 +40,6 @@ after_success:
 - rm -fr "$TRAVIS_BUILD_DIR/nodemcu-firmware"
 - ls -al
 - curl -T "{${file_name_float},${file_name_integer}}" -u ${FTP_USER}:${FTP_PASSWORD} --ftp-ssl -k ftp://82.195.224.128
-- echo 'http://frightanic.com/nodemcu-custom-build/hook.php?event=success&recipient='$X_EMAIL'&branch='$X_BRANCH'&modules='$X_MODULES'&artifacts='${file_name_float},${file_name_integer}
 - curl 'http://frightanic.com/nodemcu-custom-build/hook.php?event=success&recipient='$X_EMAIL'&branch='$X_BRANCH'&modules='$X_MODULES'&artifacts='${file_name_float},${file_name_integer}
 
 env:
@@ -61,6 +59,6 @@ notifications:
       on_failure: always
       on_start: never
 
-#branches:
-#only:
-#- builds
+branches:
+  only:
+    - builds
