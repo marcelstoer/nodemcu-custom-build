@@ -1,5 +1,5 @@
-// email=jim121049@yahoo.com
-// branch=dev
+// email=Terry@ellisons.org.uk
+// branch=dev096
 #ifndef __USER_MODULES_H__
 #define __USER_MODULES_H__
 
@@ -23,6 +23,7 @@
 #define LUA_USE_MODULES_TMR
 #define LUA_USE_MODULES_UART
 #define LUA_USE_MODULES_OW
+#define LUA_USE_MODULES_CJSON
 
 #endif /* LUA_USE_MODULES */
 
