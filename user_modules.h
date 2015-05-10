@@ -1,5 +1,5 @@
-// email=pc_cristi@yahoo.com
-// branch=master
+// email=charles.l.wilt@gmail.com
+// branch=dev
 #ifndef __USER_MODULES_H__
 #define __USER_MODULES_H__
 
@@ -18,9 +18,6 @@
 #define LUA_USE_MODULES_NODE
 #define LUA_USE_MODULES_FILE
 #define LUA_USE_MODULES_GPIO
-#define LUA_USE_MODULES_WIFI
-#define LUA_USE_MODULES_NET
-#define LUA_USE_MODULES_TMR
 #define LUA_USE_MODULES_UART
 
 #endif /* LUA_USE_MODULES */
