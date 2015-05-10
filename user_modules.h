@@ -1,5 +1,5 @@
-// email=webmaster@frightanic.com
-// branch=master
+// email=jim121049@yahoo.com
+// branch=dev096
 #ifndef __USER_MODULES_H__
 #define __USER_MODULES_H__
 
@@ -18,12 +18,11 @@
 #define LUA_USE_MODULES_NODE
 #define LUA_USE_MODULES_FILE
 #define LUA_USE_MODULES_GPIO
-#define LUA_USE_MODULES_ON
+#define LUA_USE_MODULES_WIFI
 #define LUA_USE_MODULES_NET
 #define LUA_USE_MODULES_TMR
 #define LUA_USE_MODULES_UART
-#define LUA_USE_MODULES_BIT
-#define LUA_USE_MODULES_MQTT
+#define LUA_USE_MODULES_OW
 
 #endif /* LUA_USE_MODULES */
 
