@@ -7,7 +7,7 @@ before_install:
 - modules_array=(`echo $X_MODULES | tr "," "\n"`)
 - X_NUMBER_OF_MODULES=${#modules_array[@]}
 - env
-- getTimestamp() {date +"%Y-%m-%d-%H-%M-%S"}
+- getTimestamp() { date +"%Y-%m-%d-%H-%M-%S"; }
 - curl 'http://frightanic.com/nodemcu-custom-build/hook.php?event=start&recipient='$X_EMAIL
 - git clone --depth=50 --branch=$X_BRANCH git://github.com/nodemcu/nodemcu-firmware.git nodemcu-firmware
 - cp user_modules.h nodemcu-firmware/app/include/
