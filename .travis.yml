@@ -1,9 +1,11 @@
 language: cpp
 
 before_install:
-- env
 - X_EMAIL=$(grep -E '// email=(.*)' user_modules.h | cut -c 10-)
 - X_BRANCH=$(grep -E '// branch=(.*)' user_modules.h | cut -c 11-)
+- X_MODULES=$(grep -E '// modules=(.*)' user_modules.h | cut -c 12-)
+- modules_array=(`echo $X_MODULES | tr "," "\n"`)
+- X_NUMBER_OF_MODULES=${#modules_array[@]}
 - curl 'http://frightanic.com/nodemcu-custom-build/hook.php?event=start&recipient='$X_EMAIL
 - git clone --depth=50 --branch=$X_BRANCH git://github.com/nodemcu/nodemcu-firmware.git nodemcu-firmware
 - cp user_modules.h nodemcu-firmware/app/include/
@@ -19,36 +21,26 @@ install:
 script:
 - make all
 - cd bin/
-- file_name_float=$TRAVIS_COMMIT"-nodemcu_float.bin"
+- timestamp=$(date "+%Y-%m-%d-%H-%M-%S")
+- base_file_name="nodemcu-"$X_BRANCH"-"$X_NUMBER_OF_MODULES"-modules-"$timestamp
+- file_name_float=$base_file_name"-float.bin"
 - srec_cat  -output ${file_name_float} -binary 0x00000.bin -binary -fill 0xff 0x00000 0x10000 0x10000.bin -binary -offset 0x10000
 - cd ../
 - make clean
 - make EXTRA_CCFLAGS="-DLUA_NUMBER_INTEGRAL"
 - cd bin/
-- file_name_integer=$TRAVIS_COMMIT"-nodemcu_integer.bin"
+- file_name_integer=$base_file_name"-integer.bin"
 - srec_cat -output ${file_name_integer} -binary 0x00000.bin -binary -fill 0xff 0x00000 0x10000 0x10000.bin -binary -offset 0x10000
 
 after_success:
 - cd $TRAVIS_BUILD_DIR
 - pwd
-# copy NodeMCU binaries to root dir and delete the NodeMCU directory afterwards
 - cp "$TRAVIS_BUILD_DIR/nodemcu-firmware/bin/${file_name_float}" .
 - cp "$TRAVIS_BUILD_DIR/nodemcu-firmware/bin/${file_name_integer}" .
 - rm -fr "$TRAVIS_BUILD_DIR/nodemcu-firmware"
 - ls -al
-#- git config user.name "${GIT_NAME}"
-#- git config user.email "${GIT_EMAIL}"
-#- git config credential.helper "store --file=.git/credentials"
-#- echo "https://${GH_TOKEN}:@github.com" > .git/credentials
-# re-attach branch that was detached sometime during the build ('git clone' of the nodemcu repo?)
-#- git checkout $TRAVIS_BRANCH
-#- git add ${file_name_float} ${file_name_integer}
-#- git commit -m "Add compiled NodeMCU firmware binaries"
-#- git status
-# Travis uses git://<repo> to checkout but you can't push to git:// resources
-#- git push https://github.com/marcelstoer/nodemcu-custom-build.git
 - curl -T "{${file_name_float},${file_name_integer}}" -u ${FTP_USER}:${FTP_PASSWORD} --ftp-ssl -k ftp://82.195.224.128
-- curl 'http://frightanic.com/nodemcu-custom-build/hook.php?event=success&recipient='$X_EMAIL'&artifacts='${file_name_float},${file_name_integer}
+- curl 'http://frightanic.com/nodemcu-custom-build/hook.php?event=success&recipient='$X_EMAIL'&branch='$X_BRANCH'&modules='$X_MODULES'&artifacts='${file_name_float},${file_name_integer}
 
 env:
   global:

@@ -1,5 +1,6 @@
 // email=foo@bar.com
 // branch=master
+// modules=foo,bar
 #ifndef __USER_MODULES_H__
 #define __USER_MODULES_H__
 
