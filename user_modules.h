@@ -1,6 +1,6 @@
-// email=joergg@sdf-eu.org
+// email=hsinler83@gmail.com
 // branch=master
-// modules=node,file,gpio,wifi,net,i2c,tmr,uart,ow,bit,mqtt
+// modules=node,file,wifi,net,i2c,tmr,uart,bit
 #ifndef __USER_MODULES_H__
 #define __USER_MODULES_H__
 
@@ -18,15 +18,12 @@
 #ifdef LUA_USE_MODULES
 #define LUA_USE_MODULES_NODE
 #define LUA_USE_MODULES_FILE
-#define LUA_USE_MODULES_GPIO
 #define LUA_USE_MODULES_WIFI
 #define LUA_USE_MODULES_NET
 #define LUA_USE_MODULES_I2C
 #define LUA_USE_MODULES_TMR
 #define LUA_USE_MODULES_UART
-#define LUA_USE_MODULES_OW
 #define LUA_USE_MODULES_BIT
-#define LUA_USE_MODULES_MQTT
 
 #endif /* LUA_USE_MODULES */
 
