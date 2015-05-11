@@ -1,6 +1,6 @@
-// email=pavel.brychta@post.cz
+// email=hsinler83@gmail.com
 // branch=master
-// modules=node,file,gpio,wifi,net,i2c,tmr,uart,mqtt,u8g,ws2812
+// modules=node,file,gpio,wifi,net,i2c,tmr,uart,bit
 #ifndef __USER_MODULES_H__
 #define __USER_MODULES_H__
 
@@ -24,9 +24,7 @@
 #define LUA_USE_MODULES_I2C
 #define LUA_USE_MODULES_TMR
 #define LUA_USE_MODULES_UART
-#define LUA_USE_MODULES_MQTT
-#define LUA_USE_MODULES_U8G
-#define LUA_USE_MODULES_WS2812
+#define LUA_USE_MODULES_BIT
 
 #endif /* LUA_USE_MODULES */
 
