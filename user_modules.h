@@ -1,6 +1,6 @@
-// email=bascotti@gmx.de
+// email=fobilux@gmail.com
 // branch=master
-// modules=node,file,gpio,wifi,net,tmr,uart
+// modules=node,file,gpio,wifi,net,pwm,i2c,spi,tmr,adc,uart
 #ifndef __USER_MODULES_H__
 #define __USER_MODULES_H__
 
@@ -21,7 +21,11 @@
 #define LUA_USE_MODULES_GPIO
 #define LUA_USE_MODULES_WIFI
 #define LUA_USE_MODULES_NET
+#define LUA_USE_MODULES_PWM
+#define LUA_USE_MODULES_I2C
+#define LUA_USE_MODULES_SPI
 #define LUA_USE_MODULES_TMR
+#define LUA_USE_MODULES_ADC
 #define LUA_USE_MODULES_UART
 
 #endif /* LUA_USE_MODULES */
