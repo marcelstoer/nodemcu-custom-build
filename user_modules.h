@@ -1,6 +1,6 @@
-// email=felipe.echanique@gmail.com
+// email=jim121049@yahoo.com
 // branch=master
-// modules=node,file,gpio,wifi,net,pwm,tmr,uart
+// modules=node,file,gpio,wifi,net,tmr,uart,ow,bit
 #ifndef __USER_MODULES_H__
 #define __USER_MODULES_H__
 
@@ -21,9 +21,10 @@
 #define LUA_USE_MODULES_GPIO
 #define LUA_USE_MODULES_WIFI
 #define LUA_USE_MODULES_NET
-#define LUA_USE_MODULES_PWM
 #define LUA_USE_MODULES_TMR
 #define LUA_USE_MODULES_UART
+#define LUA_USE_MODULES_OW
+#define LUA_USE_MODULES_BIT
 
 #endif /* LUA_USE_MODULES */
 
