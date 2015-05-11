@@ -1,6 +1,6 @@
 // email=hsinler83@gmail.com
 // branch=dev096
-// modules=node,file,gpio,wifi,net,i2c,tmr,uart
+// modules=node,file,wifi,net,i2c,tmr,uart
 #ifndef __USER_MODULES_H__
 #define __USER_MODULES_H__
 
@@ -18,7 +18,6 @@
 #ifdef LUA_USE_MODULES
 #define LUA_USE_MODULES_NODE
 #define LUA_USE_MODULES_FILE
-#define LUA_USE_MODULES_GPIO
 #define LUA_USE_MODULES_WIFI
 #define LUA_USE_MODULES_NET
 #define LUA_USE_MODULES_I2C
