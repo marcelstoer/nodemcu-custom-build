@@ -1,5 +1,5 @@
-// email=sjfaustino@gmail.com
-// branch=dev
+// email=drcyclone2005@gmail.com
+// branch=master
 // modules=node,file,gpio,wifi,net,tmr,uart
 #ifndef __USER_MODULES_H__
 #define __USER_MODULES_H__
