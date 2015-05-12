@@ -1,6 +1,6 @@
-// email=anon@grr.la
-// branch=master
-// modules=node,file,gpio,wifi,net,tmr,uart
+// email=vudangngoc@gmail.com
+// branch=dev
+// modules=node,file,gpio,wifi,net,tmr,cjson
 #ifndef __USER_MODULES_H__
 #define __USER_MODULES_H__
 
@@ -22,7 +22,7 @@
 #define LUA_USE_MODULES_WIFI
 #define LUA_USE_MODULES_NET
 #define LUA_USE_MODULES_TMR
-#define LUA_USE_MODULES_UART
+#define LUA_USE_MODULES_CJSON
 
 #endif /* LUA_USE_MODULES */
 
