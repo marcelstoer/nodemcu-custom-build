@@ -1,6 +1,6 @@
-// email=alresalatbuy@gmail.com
+// email=timpuri@kepit.fi
 // branch=dev096
-// modules=node,file,gpio,wifi,net,tmr,uart,ow
+// modules=node,file,gpio,wifi,net,tmr,adc,uart,ow
 #ifndef __USER_MODULES_H__
 #define __USER_MODULES_H__
 
@@ -22,6 +22,7 @@
 #define LUA_USE_MODULES_WIFI
 #define LUA_USE_MODULES_NET
 #define LUA_USE_MODULES_TMR
+#define LUA_USE_MODULES_ADC
 #define LUA_USE_MODULES_UART
 #define LUA_USE_MODULES_OW
 
