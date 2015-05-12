@@ -1,6 +1,6 @@
-// email=mikewen@gmail.com
+// email=vleiswal@sagateway.com
 // branch=master
-// modules=node,file,gpio,wifi,net,i2c,spi,tmr,uart,ow,bit,u8g,ws2812
+// modules=node,file,gpio,wifi,net,i2c,spi,tmr,uart,mqtt
 #ifndef __USER_MODULES_H__
 #define __USER_MODULES_H__
 
@@ -25,10 +25,7 @@
 #define LUA_USE_MODULES_SPI
 #define LUA_USE_MODULES_TMR
 #define LUA_USE_MODULES_UART
-#define LUA_USE_MODULES_OW
-#define LUA_USE_MODULES_BIT
-#define LUA_USE_MODULES_U8G
-#define LUA_USE_MODULES_WS2812
+#define LUA_USE_MODULES_MQTT
 
 #endif /* LUA_USE_MODULES */
 
