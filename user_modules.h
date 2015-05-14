@@ -1,6 +1,6 @@
-// email=giraffe.giraffe@gmail.com
+// email=artem.pastukhov@gmail.com
 // branch=dev096
-// modules=node,file,gpio,wifi,net,tmr,uart,bit,cjson
+// modules=node,file,gpio,wifi,net,pwm,spi,tmr,uart,bit,mqtt,cjson
 #ifndef __USER_MODULES_H__
 #define __USER_MODULES_H__
 
@@ -21,9 +21,12 @@
 #define LUA_USE_MODULES_GPIO
 #define LUA_USE_MODULES_WIFI
 #define LUA_USE_MODULES_NET
+#define LUA_USE_MODULES_PWM
+#define LUA_USE_MODULES_SPI
 #define LUA_USE_MODULES_TMR
 #define LUA_USE_MODULES_UART
 #define LUA_USE_MODULES_BIT
+#define LUA_USE_MODULES_MQTT
 #define LUA_USE_MODULES_CJSON
 
 #endif /* LUA_USE_MODULES */
