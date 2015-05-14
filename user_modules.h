@@ -1,6 +1,6 @@
-// email=x029ah@gmail.com
+// email=zdenek@bouresh.com
 // branch=dev096
-// modules=node,file,gpio,wifi,net,tmr,uart
+// modules=node,file,gpio,wifi,net,pwm,spi,tmr,uart,ow,mqtt,u8g,cjson
 #ifndef __USER_MODULES_H__
 #define __USER_MODULES_H__
 
@@ -21,8 +21,14 @@
 #define LUA_USE_MODULES_GPIO
 #define LUA_USE_MODULES_WIFI
 #define LUA_USE_MODULES_NET
+#define LUA_USE_MODULES_PWM
+#define LUA_USE_MODULES_SPI
 #define LUA_USE_MODULES_TMR
 #define LUA_USE_MODULES_UART
+#define LUA_USE_MODULES_OW
+#define LUA_USE_MODULES_MQTT
+#define LUA_USE_MODULES_U8G
+#define LUA_USE_MODULES_CJSON
 
 #endif /* LUA_USE_MODULES */
 
