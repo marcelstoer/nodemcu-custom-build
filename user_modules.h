@@ -1,6 +1,6 @@
 // email=dani.eichhorn@squix.ch
 // branch=master
-// modules=node,file,gpio,i2c,uart,bit,u8g
+// modules=node,file,gpio,i2c,tmr,uart,bit,u8g
 #ifndef __USER_MODULES_H__
 #define __USER_MODULES_H__
 
@@ -20,6 +20,7 @@
 #define LUA_USE_MODULES_FILE
 #define LUA_USE_MODULES_GPIO
 #define LUA_USE_MODULES_I2C
+#define LUA_USE_MODULES_TMR
 #define LUA_USE_MODULES_UART
 #define LUA_USE_MODULES_BIT
 #define LUA_USE_MODULES_U8G
