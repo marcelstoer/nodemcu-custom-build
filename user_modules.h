@@ -1,6 +1,6 @@
-// email=alain.fouche@aol.fr
+// email=dani.eichhorn@squix.ch
 // branch=master
-// modules=node,file,gpio,wifi,net,i2c,tmr,adc,uart,ow
+// modules=node,file,gpio,i2c,uart,u8g
 #ifndef __USER_MODULES_H__
 #define __USER_MODULES_H__
 
@@ -19,13 +19,9 @@
 #define LUA_USE_MODULES_NODE
 #define LUA_USE_MODULES_FILE
 #define LUA_USE_MODULES_GPIO
-#define LUA_USE_MODULES_WIFI
-#define LUA_USE_MODULES_NET
 #define LUA_USE_MODULES_I2C
-#define LUA_USE_MODULES_TMR
-#define LUA_USE_MODULES_ADC
 #define LUA_USE_MODULES_UART
-#define LUA_USE_MODULES_OW
+#define LUA_USE_MODULES_U8G
 
 #endif /* LUA_USE_MODULES */
 
