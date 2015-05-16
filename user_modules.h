@@ -1,6 +1,6 @@
-// email=haugen.steinar@gmail.com
+// email=georgehahns@studyorganic.com
 // branch=dev096
-// modules=node,file,gpio,wifi,net,spi,tmr,uart,ow,u8g,ws2812
+// modules=node,file,gpio,wifi,net,spi,tmr,uart,mqtt,ws2812
 #ifndef __USER_MODULES_H__
 #define __USER_MODULES_H__
 
@@ -24,8 +24,7 @@
 #define LUA_USE_MODULES_SPI
 #define LUA_USE_MODULES_TMR
 #define LUA_USE_MODULES_UART
-#define LUA_USE_MODULES_OW
-#define LUA_USE_MODULES_U8G
+#define LUA_USE_MODULES_MQTT
 #define LUA_USE_MODULES_WS2812
 
 #endif /* LUA_USE_MODULES */
