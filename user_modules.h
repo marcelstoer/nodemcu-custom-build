@@ -1,6 +1,6 @@
-// email=dani.eichhorn@squix.ch
+// email=jay.slaten@gmail.com
 // branch=master
-// modules=node,file,gpio,i2c,tmr,uart,bit,u8g
+// modules=node,file,gpio,wifi,net,pwm,i2c,spi,tmr,adc,uart,ws2812,cjson
 #ifndef __USER_MODULES_H__
 #define __USER_MODULES_H__
 
@@ -19,11 +19,16 @@
 #define LUA_USE_MODULES_NODE
 #define LUA_USE_MODULES_FILE
 #define LUA_USE_MODULES_GPIO
+#define LUA_USE_MODULES_WIFI
+#define LUA_USE_MODULES_NET
+#define LUA_USE_MODULES_PWM
 #define LUA_USE_MODULES_I2C
+#define LUA_USE_MODULES_SPI
 #define LUA_USE_MODULES_TMR
+#define LUA_USE_MODULES_ADC
 #define LUA_USE_MODULES_UART
-#define LUA_USE_MODULES_BIT
-#define LUA_USE_MODULES_U8G
+#define LUA_USE_MODULES_WS2812
+#define LUA_USE_MODULES_CJSON
 
 #endif /* LUA_USE_MODULES */
 
