@@ -7,7 +7,7 @@ before_install:
 - X_MODULES=$(grep -E 'modules=(.*)' build.config | cut -c 9-)
 - X_U8G_FONTS=$(grep -E 'u8g-fonts=(.*)' build.config | cut -c 11-)
 - X_SSL_ENABLED=$(grep -E 'ssl-enabled=(.*)' build.config | cut -c 12-)
-# count , in the string and add +1
+# count ',' in the string and add +1
 - X_NUMBER_OF_MODULES=$((`echo $X_MODULES | tr -d -c ',' | wc -m`+1))
 
 - curl 'http://frightanic.com/nodemcu-custom-build/hook.php?event=start&recipient='$X_EMAIL
@@ -26,8 +26,16 @@ before_install:
 # comment the SSL flag if not enabled
 - [ "${X_SSL_ENABLED}" != "true" ] && sed -e 's/#define CLIENT_SSL_ENABLE/\/\/ #define CLIENT_SSL_ENABLE/g' user_config.h > user_config.h.tmp && mv user_config.h.tmp user_config.h
 
+# replace ',' by newline and turn every item into '    U8G_FONT_TABLE_ENTRY(<font-name>) \'
+- export X_U8G_FONTS_STRING=$(echo -n X_U8G_FONTS | tr , '\n' | perl -pe 's/(.*)\n/    U8G_FONT_TABLE_ENTRY($1) \\\n/g')
+# inject the fonts string into u8g_config.h between '#define U8G_FONT_TABLE \\n' and '\n#undef U8G_FONT_TABLE_ENTRY'
+# the 's' flag in '/sg' makes . match newlines
+# Perl creates a temp file which is removed right after the manipulation
+- perl -e 'local $/; $_ = <>; s/(#define U8G_FONT_TABLE \\\n)(.*)(\n#undef U8G_FONT_TABLE_ENTRY)/$1$ENV{"X_U8G_FONTS_STRING"}$3/sg; print' u8g_config.h > u8g_config.h.tmp && mv u8g_config.h.tmp u8g_config.h
+
 - cat user_modules.h
 - cat user_config.h
+- cat u8g_config.h
 # back to where we came from
 - cd $TRAVIS_BUILD_DIR
 
