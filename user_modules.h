@@ -1,5 +1,5 @@
-// email=everttoivonen@gmail.com
-// branch=dev
+// email=crapthings@gmail.com
+// branch=master
 // modules=node,file,gpio,wifi,net,tmr,uart
 #ifndef __USER_MODULES_H__
 #define __USER_MODULES_H__
