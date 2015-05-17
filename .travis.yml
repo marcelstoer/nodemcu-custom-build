@@ -1,15 +1,30 @@
 language: cpp
 
 before_install:
-- X_EMAIL=$(grep -E '// email=(.*)' user_modules.h | cut -c 10-)
-- X_BRANCH=$(grep -E '// branch=(.*)' user_modules.h | cut -c 11-)
-- X_MODULES=$(grep -E '// modules=(.*)' user_modules.h | cut -c 12-)
-- modules_array=(`echo $X_MODULES | tr "," "\n"`)
-- X_NUMBER_OF_MODULES=${#modules_array[@]}
+- cat build.config
+- X_EMAIL=$(grep -E 'email=(.*)' build.config | cut -c 7-)
+- X_BRANCH=$(grep -E 'branch=(.*)' build.config | cut -c 8-)
+- X_MODULES=$(grep -E 'modules=(.*)' build.config | cut -c 9-)
+- X_U8G-FONTS=$(grep -E 'u8g-fonts=(.*)' build.config | cut -c 11-)
+- X_SSL_ENABLED=$(grep -E 'ssl-enabled=(.*)' build.config | cut -c 12-)
+# count , in the string and add +1
+- X_NUMBER_OF_MODULES=$((`echo $X_MODULES | tr -d -c ',' | wc -m`+1))
+
 - curl 'http://frightanic.com/nodemcu-custom-build/hook.php?event=start&recipient='$X_EMAIL
 - git clone --depth=50 --branch=$X_BRANCH git://github.com/nodemcu/nodemcu-firmware.git nodemcu-firmware
-- cp user_modules.h nodemcu-firmware/app/include/
+
+- cd nodemcu-firmware/app/include
+
+# replace , by newline, make it uppercase and prepend every item with '#define LUA_USE_MODULES_'
+- export X_MODULES_STRING=$(echo $X_MODULES | tr , '\n' | tr '[a-z]' '[A-Z]' | perl -pe 's/(.*)\n/#define LUA_USE_MODULES_$1\n/g')
+# inject the modules string into user_modules.h between '#ifdef LUA_USE_MODULES\n' and '\n#endif /* LUA_USE_MODULES */'
+# the 's' flag in '/sg' makes . match newlines
+# Perl creates a temp file which is removed right after the manipulation
+- perl -e 'local $/; $_ = <>; s/(#ifdef LUA_USE_MODULES\n)(.*)(\n#endif \/\* LUA_USE_MODULES \*\/)/$1$ENV{"X_MODULES_STRING"}$3/sg; print' user_modules.h > user_modules.h.tmp && mv user_modules.h.tmp user_modules.h
+
 - cat nodemcu-firmware/app/include/user_modules.h
+- cat nodemcu-firmware/app/include/user_config.h
+
 - cd nodemcu-firmware
 - ls -altr
 - sudo apt-get install -y python-serial srecord
@@ -62,3 +77,4 @@ notifications:
 branches:
   only:
     - builds
+    - testing
