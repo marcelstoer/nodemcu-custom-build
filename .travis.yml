@@ -5,7 +5,7 @@ before_install:
 - X_EMAIL=$(grep -E 'email=(.*)' build.config | cut -c 7-)
 - X_BRANCH=$(grep -E 'branch=(.*)' build.config | cut -c 8-)
 - X_MODULES=$(grep -E 'modules=(.*)' build.config | cut -c 9-)
-- X_U8G-FONTS=$(grep -E 'u8g-fonts=(.*)' build.config | cut -c 11-)
+- X_U8G_FONTS=$(grep -E 'u8g-fonts=(.*)' build.config | cut -c 11-)
 - X_SSL_ENABLED=$(grep -E 'ssl-enabled=(.*)' build.config | cut -c 12-)
 # count , in the string and add +1
 - X_NUMBER_OF_MODULES=$((`echo $X_MODULES | tr -d -c ',' | wc -m`+1))
