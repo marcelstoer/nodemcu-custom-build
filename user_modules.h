@@ -1,4 +1,4 @@
-// email=janez.grad78@gmail.com
+// email=jnogues@gmail.com
 // branch=master
 // modules=node,file,gpio,wifi,net,tmr,uart
 #ifndef __USER_MODULES_H__
