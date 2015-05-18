@@ -1,6 +1,6 @@
-// email=ward@usq.edu.au
-// branch=master
-// modules=node,file,gpio,wifi,net,pwm,i2c,spi,tmr,adc,uart,ow,bit,ws2812,cjson
+// email=crapthings@gmail.com
+// branch=dev096
+// modules=node,file,gpio,wifi,net,tmr,uart,mqtt,cjson
 #ifndef __USER_MODULES_H__
 #define __USER_MODULES_H__
 
@@ -21,15 +21,9 @@
 #define LUA_USE_MODULES_GPIO
 #define LUA_USE_MODULES_WIFI
 #define LUA_USE_MODULES_NET
-#define LUA_USE_MODULES_PWM
-#define LUA_USE_MODULES_I2C
-#define LUA_USE_MODULES_SPI
 #define LUA_USE_MODULES_TMR
-#define LUA_USE_MODULES_ADC
 #define LUA_USE_MODULES_UART
-#define LUA_USE_MODULES_OW
-#define LUA_USE_MODULES_BIT
-#define LUA_USE_MODULES_WS2812
+#define LUA_USE_MODULES_MQTT
 #define LUA_USE_MODULES_CJSON
 
 #endif /* LUA_USE_MODULES */
