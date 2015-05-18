@@ -24,7 +24,7 @@ before_install:
 - perl -e 'local $/; $_ = <>; s/(#ifdef LUA_USE_MODULES\n)(.*)(\n#endif \/\* LUA_USE_MODULES \*\/)/$1$ENV{"X_MODULES_STRING"}$3/sg; print' user_modules.h > user_modules.h.tmp && mv user_modules.h.tmp user_modules.h
 
 # comment the SSL flag if not enabled
-- bash set-ssl.sh
+- bash $TRAVIS_BUILD_DIR/set-ssl.sh
 
 # replace ',' by newline and turn every item into '    U8G_FONT_TABLE_ENTRY(<font-name>) \'
 - export X_U8G_FONTS_STRING=$(echo -n X_U8G_FONTS | tr , '\n' | perl -pe 's/(.*)\n/    U8G_FONT_TABLE_ENTRY($1) \\\n/g')
