@@ -1,15 +1,35 @@
 language: cpp
 
 before_install:
-- X_EMAIL=$(grep -E '// email=(.*)' user_modules.h | cut -c 10-)
-- X_BRANCH=$(grep -E '// branch=(.*)' user_modules.h | cut -c 11-)
-- X_MODULES=$(grep -E '// modules=(.*)' user_modules.h | cut -c 12-)
-- modules_array=(`echo $X_MODULES | tr "," "\n"`)
-- X_NUMBER_OF_MODULES=${#modules_array[@]}
+- cat build.config
+- export X_EMAIL=$(grep -E 'email=(.*)' build.config | cut -c 7-)
+- export X_BRANCH=$(grep -E 'branch=(.*)' build.config | cut -c 8-)
+- export X_MODULES=$(grep -E 'modules=(.*)' build.config | cut -c 9-)
+- export X_U8G_FONTS=$(grep -E 'u8g-fonts=(.*)' build.config | cut -c 11-)
+- export X_SSL_ENABLED=$(grep -E 'ssl-enabled=(.*)' build.config | cut -c 13-)
+# count ',' in the string and add +1
+- export X_NUMBER_OF_MODULES=$((`echo $X_MODULES | tr -d -c ',' | wc -m`+1))
+- env | grep 'X_'
+
 - curl 'http://frightanic.com/nodemcu-custom-build/hook.php?event=start&recipient='$X_EMAIL
 - git clone --depth=50 --branch=$X_BRANCH git://github.com/nodemcu/nodemcu-firmware.git nodemcu-firmware
-- cp user_modules.h nodemcu-firmware/app/include/
-- cat nodemcu-firmware/app/include/user_modules.h
+
+# dig in and modify those config files
+- cd nodemcu-firmware/app/include
+
+# replace modules in user_modules.h by the selected ones
+- bash $TRAVIS_BUILD_DIR/set-modules.sh
+# comment the SSL flag in user_config.h if not enabled
+- bash $TRAVIS_BUILD_DIR/set-ssl.sh
+# replace fonts in u8g_config.h by the selected ones
+- bash $TRAVIS_BUILD_DIR/set-fonts.sh
+
+- cat user_modules.h
+- cat user_config.h
+- cat u8g_config.h
+# back to where we came from
+- cd $TRAVIS_BUILD_DIR
+
 - cd nodemcu-firmware
 - ls -altr
 - sudo apt-get install -y python-serial srecord
@@ -62,3 +82,4 @@ notifications:
 branches:
   only:
     - builds
+    - testing
