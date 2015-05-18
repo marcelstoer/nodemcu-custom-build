@@ -88,7 +88,7 @@ notifications:
       on_failure: always
       on_start: never
 
-branches:
-  only:
-    - builds
-    - testing
+#branches:
+ # only:
+  #  - builds
+  #  - testing
