@@ -1,6 +1,6 @@
-// email=itail@magen-ecoenergy.com
+// email=vleiswal@sagateway.com
 // branch=master
-// modules=node,file,gpio,wifi,net,tmr,uart,mqtt
+// modules=node,file,gpio,i2c,tmr,uart
 #ifndef __USER_MODULES_H__
 #define __USER_MODULES_H__
 
@@ -19,11 +19,9 @@
 #define LUA_USE_MODULES_NODE
 #define LUA_USE_MODULES_FILE
 #define LUA_USE_MODULES_GPIO
-#define LUA_USE_MODULES_WIFI
-#define LUA_USE_MODULES_NET
+#define LUA_USE_MODULES_I2C
 #define LUA_USE_MODULES_TMR
 #define LUA_USE_MODULES_UART
-#define LUA_USE_MODULES_MQTT
 
 #endif /* LUA_USE_MODULES */
 
