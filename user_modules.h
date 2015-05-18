@@ -1,6 +1,6 @@
-// email=liaan@rcgear.co.za
+// email=joergg@sdf-eu.org
 // branch=master
-// modules=node,file,gpio,wifi,net,tmr,uart,mqtt
+// modules=node,file,gpio,wifi,net,i2c,tmr,uart,ow,bit,mqtt
 #ifndef __USER_MODULES_H__
 #define __USER_MODULES_H__
 
@@ -21,8 +21,11 @@
 #define LUA_USE_MODULES_GPIO
 #define LUA_USE_MODULES_WIFI
 #define LUA_USE_MODULES_NET
+#define LUA_USE_MODULES_I2C
 #define LUA_USE_MODULES_TMR
 #define LUA_USE_MODULES_UART
+#define LUA_USE_MODULES_OW
+#define LUA_USE_MODULES_BIT
 #define LUA_USE_MODULES_MQTT
 
 #endif /* LUA_USE_MODULES */
