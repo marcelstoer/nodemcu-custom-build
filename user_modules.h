@@ -1,6 +1,6 @@
 // email=raward@gmail.com
-// branch=master
-// modules=node,file,gpio,wifi,net,pwm,i2c,spi,tmr,adc,uart,ow,bit,coap,u8g,ws2812,cjson
+// branch=dev096
+// modules=node,file,gpio,wifi,net,pwm,i2c,spi,tmr,adc,uart,ow,bit,mqtt,coap,u8g,ws2812,cjson
 #ifndef __USER_MODULES_H__
 #define __USER_MODULES_H__
 
@@ -29,6 +29,7 @@
 #define LUA_USE_MODULES_UART
 #define LUA_USE_MODULES_OW
 #define LUA_USE_MODULES_BIT
+#define LUA_USE_MODULES_MQTT
 #define LUA_USE_MODULES_COAP
 #define LUA_USE_MODULES_U8G
 #define LUA_USE_MODULES_WS2812
