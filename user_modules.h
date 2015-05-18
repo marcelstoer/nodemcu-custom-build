@@ -1,6 +1,6 @@
-// email=jnogues@gmail.com
-// branch=dev096
-// modules=node,file,gpio,wifi,net,tmr,uart
+// email=liaan@rcgear.co.za
+// branch=master
+// modules=node,file,gpio,wifi,net,tmr,uart,mqtt
 #ifndef __USER_MODULES_H__
 #define __USER_MODULES_H__
 
@@ -23,6 +23,7 @@
 #define LUA_USE_MODULES_NET
 #define LUA_USE_MODULES_TMR
 #define LUA_USE_MODULES_UART
+#define LUA_USE_MODULES_MQTT
 
 #endif /* LUA_USE_MODULES */
 
