@@ -2,13 +2,14 @@ language: cpp
 
 before_install:
 - cat build.config
-- X_EMAIL=$(grep -E 'email=(.*)' build.config | cut -c 7-)
-- X_BRANCH=$(grep -E 'branch=(.*)' build.config | cut -c 8-)
-- X_MODULES=$(grep -E 'modules=(.*)' build.config | cut -c 9-)
-- X_U8G_FONTS=$(grep -E 'u8g-fonts=(.*)' build.config | cut -c 11-)
-- X_SSL_ENABLED=$(grep -E 'ssl-enabled=(.*)' build.config | cut -c 12-)
+- export X_EMAIL=$(grep -E 'email=(.*)' build.config | cut -c 7-)
+- export X_BRANCH=$(grep -E 'branch=(.*)' build.config | cut -c 8-)
+- export X_MODULES=$(grep -E 'modules=(.*)' build.config | cut -c 9-)
+- export X_U8G_FONTS=$(grep -E 'u8g-fonts=(.*)' build.config | cut -c 11-)
+- export X_SSL_ENABLED=$(grep -E 'ssl-enabled=(.*)' build.config | cut -c 13-)
 # count ',' in the string and add +1
-- X_NUMBER_OF_MODULES=$((`echo $X_MODULES | tr -d -c ',' | wc -m`+1))
+- export X_NUMBER_OF_MODULES=$((`echo $X_MODULES | tr -d -c ',' | wc -m`+1))
+- env | grep 'X_'
 
 - curl 'http://frightanic.com/nodemcu-custom-build/hook.php?event=start&recipient='$X_EMAIL
 - git clone --depth=50 --branch=$X_BRANCH git://github.com/nodemcu/nodemcu-firmware.git nodemcu-firmware
@@ -16,22 +17,12 @@ before_install:
 # dig in and modify those config files
 - cd nodemcu-firmware/app/include
 
-# replace ',' by newline, make it uppercase and prepend every item with '#define LUA_USE_MODULES_'
-- export X_MODULES_STRING=$(echo $X_MODULES | tr , '\n' | tr '[a-z]' '[A-Z]' | perl -pe 's/(.*)\n/#define LUA_USE_MODULES_$1\n/g')
-# inject the modules string into user_modules.h between '#ifdef LUA_USE_MODULES\n' and '\n#endif /* LUA_USE_MODULES */'
-# the 's' flag in '/sg' makes . match newlines
-# Perl creates a temp file which is removed right after the manipulation
-- perl -e 'local $/; $_ = <>; s/(#ifdef LUA_USE_MODULES\n)(.*)(\n#endif \/\* LUA_USE_MODULES \*\/)/$1$ENV{"X_MODULES_STRING"}$3/sg; print' user_modules.h > user_modules.h.tmp && mv user_modules.h.tmp user_modules.h
-
-# comment the SSL flag if not enabled
-- [ "${X_SSL_ENABLED}" != "true" ] && sed -e 's/#define CLIENT_SSL_ENABLE/\/\/ #define CLIENT_SSL_ENABLE/g' user_config.h > user_config.h.tmp && mv user_config.h.tmp user_config.h
-
-# replace ',' by newline and turn every item into '    U8G_FONT_TABLE_ENTRY(<font-name>) \'
-- export X_U8G_FONTS_STRING=$(echo -n X_U8G_FONTS | tr , '\n' | perl -pe 's/(.*)\n/    U8G_FONT_TABLE_ENTRY($1) \\\n/g')
-# inject the fonts string into u8g_config.h between '#define U8G_FONT_TABLE \\n' and '\n#undef U8G_FONT_TABLE_ENTRY'
-# the 's' flag in '/sg' makes . match newlines
-# Perl creates a temp file which is removed right after the manipulation
-- perl -e 'local $/; $_ = <>; s/(#define U8G_FONT_TABLE \\\n)(.*)(\n#undef U8G_FONT_TABLE_ENTRY)/$1$ENV{"X_U8G_FONTS_STRING"}$3/sg; print' u8g_config.h > u8g_config.h.tmp && mv u8g_config.h.tmp u8g_config.h
+# replace modules in user_modules.h by the selected ones
+- bash $TRAVIS_BUILD_DIR/set-modules.sh
+# comment the SSL flag in user_config.h if not enabled
+- bash $TRAVIS_BUILD_DIR/set-ssl.sh
+# replace fonts in u8g_config.h by the selected ones
+- bash $TRAVIS_BUILD_DIR/set-fonts.sh
 
 - cat user_modules.h
 - cat user_config.h
@@ -88,7 +79,7 @@ notifications:
       on_failure: always
       on_start: never
 
-#branches:
- # only:
-  #  - builds
-  #  - testing
+branches:
+  only:
+    - builds
+    - testing
