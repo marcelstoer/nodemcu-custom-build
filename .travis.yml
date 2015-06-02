@@ -23,10 +23,13 @@ before_install:
 - bash $TRAVIS_BUILD_DIR/set-ssl.sh
 # replace fonts in u8g_config.h by the selected ones
 - bash $TRAVIS_BUILD_DIR/set-fonts.sh
+# replace version strings in user_version.h
+- bash $TRAVIS_BUILD_DIR/set-version.sh
 
 - cat user_modules.h
 - cat user_config.h
 - cat u8g_config.h
+- cat user_version.h
 # back to where we came from
 - cd $TRAVIS_BUILD_DIR
 
