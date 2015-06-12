@@ -3,7 +3,7 @@
 set -e
 
 if [ "${X_U8G_FONTS}" == "" ]; then
-  export X_U8G_FONTS_STRING='\n'
+  export X_U8G_FONTS_STRING=' '
 else
   # replace ',' by newline and turn every item into '    U8G_FONT_TABLE_ENTRY(<font-name>) \' (except
   # the one on the last line which mustn't have the '\'
