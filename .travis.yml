@@ -11,7 +11,7 @@ before_install:
 - export X_NUMBER_OF_MODULES=$((`echo $X_MODULES | tr -d -c ',' | wc -m`+1))
 - env | grep 'X_'
 
-- wget -qO- 'http://frightanic.com/nodemcu-custom-build/hook.php?event=start&recipient='$X_EMAIL &> /dev/null
+- wget -d -v 'http://frightanic.com/nodemcu-custom-build/hook.php?event=start&recipient='$X_EMAIL
 - git clone --depth=50 --branch=$X_BRANCH git://github.com/nodemcu/nodemcu-firmware.git nodemcu-firmware
 
 # dig in and modify those config files
@@ -63,7 +63,7 @@ after_success:
 - rm -fr "$TRAVIS_BUILD_DIR/nodemcu-firmware"
 - ls -al
 - curl -T "{${file_name_float},${file_name_integer}}" -u ${FTP_USER}:${FTP_PASSWORD} --ftp-ssl -k ftp://82.195.224.128
-- wget -qO- 'http://frightanic.com/nodemcu-custom-build/hook.php?event=success&recipient='$X_EMAIL'&branch='$X_BRANCH'&modules='$X_MODULES'&artifacts='${file_name_float},${file_name_integer} &> /dev/null
+- wget -d -v 'http://frightanic.com/nodemcu-custom-build/hook.php?event=success&recipient='$X_EMAIL'&branch='$X_BRANCH'&modules='$X_MODULES'&artifacts='${file_name_float},${file_name_integer}
 
 env:
   global:
