@@ -47,8 +47,7 @@ install:
 - tar -zxvf tools/esp-open-sdk.tar.gz
 - export PATH=$PATH:$PWD/esp-open-sdk/sdk:$PWD/esp-open-sdk/xtensa-lx106-elf/bin
 script:
-- export BUILD_DATE=$(date +%Y%m%d)
-- make EXTRA_CCFLAGS="-DBUILD_DATE='\"'$BUILD_DATE'\"'" all
+- make all
 - cd bin/
 - timestamp=$(date "+%Y-%m-%d-%H-%M-%S")
 - base_file_name="nodemcu-"$X_BRANCH"-"$X_NUMBER_OF_MODULES"-modules-"$timestamp
@@ -56,7 +55,7 @@ script:
 - srec_cat  -output ${file_name_float} -binary 0x00000.bin -binary -fill 0xff 0x00000 0x10000 0x10000.bin -binary -offset 0x10000
 - cd ../
 - make clean
-- make EXTRA_CCFLAGS="-DLUA_NUMBER_INTEGRAL -DBUILD_DATE='\"'$BUILD_DATE'\"'"
+- make EXTRA_CCFLAGS="-DLUA_NUMBER_INTEGRAL"
 - cd bin/
 - file_name_integer=$base_file_name"-integer.bin"
 - srec_cat -output ${file_name_integer} -binary 0x00000.bin -binary -fill 0xff 0x00000 0x10000 0x10000.bin -binary -offset 0x10000
