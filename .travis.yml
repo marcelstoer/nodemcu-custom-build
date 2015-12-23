@@ -5,6 +5,9 @@ addons:
     packages:
     - python-serial
     - srecord
+cache:
+  directories:
+    - cache
 before_install:
 - cat build.config
 - export X_EMAIL=$(grep -E 'email=(.*)' build.config | cut -c 7-)
@@ -18,7 +21,7 @@ before_install:
 - env | grep 'X_'
 
 - wget -d -v 'http://nodemcu-build.com/hook.php?event=start&recipient='$X_EMAIL
-- git clone --depth=50 --branch=$X_BRANCH git://github.com/nodemcu/nodemcu-firmware.git nodemcu-firmware
+- git clone --depth=50 --branch=$X_BRANCH git://github.com/jmattsson/nodemcu-firmware.git nodemcu-firmware
 
 # dig in and modify those config files
 - cd nodemcu-firmware/app/include
@@ -32,7 +35,7 @@ before_install:
 # replace version strings in user_version.h
 - bash $TRAVIS_BUILD_DIR/set-version.sh
 # set the NODE_DEBUG and COAP_DEBUG flags in user_config.h
-- bash $TRAVIS_BUILD_DIR/set-debug.sh  
+- bash $TRAVIS_BUILD_DIR/set-debug.sh
 
 - cat user_modules.h
 - cat user_config.h
@@ -90,4 +93,4 @@ notifications:
 branches:
   only:
     - builds
-    - master 
+    - master
