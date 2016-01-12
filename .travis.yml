@@ -21,7 +21,7 @@ before_install:
 - env | grep 'X_'
 
 - wget -d -v 'http://nodemcu-build.com/hook.php?event=start&recipient='$X_EMAIL
-- git clone --depth=50 --branch=$X_BRANCH git://github.com/jmattsson/nodemcu-firmware.git nodemcu-firmware
+- git clone --depth=1 --branch=$X_BRANCH git://github.com/nodemcu/nodemcu-firmware.git nodemcu-firmware
 
 # dig in and modify those config files
 - cd nodemcu-firmware/app/include
