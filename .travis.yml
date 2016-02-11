@@ -5,6 +5,9 @@ addons:
     packages:
     - python-serial
     - srecord
+cache:
+  directories:
+    - cache
 before_install:
 - cat build.config
 - export X_EMAIL=$(grep -E 'email=(.*)' build.config | cut -c 7-)
@@ -17,8 +20,8 @@ before_install:
 - export X_NUMBER_OF_MODULES=$((`echo $X_MODULES | tr -d -c ',' | wc -m`+1))
 - env | grep 'X_'
 
-- wget -d -v 'http://nodemcu-build.com/hook.php?event=start&recipient='$X_EMAIL
-- git clone --depth=50 --branch=$X_BRANCH git://github.com/nodemcu/nodemcu-firmware.git nodemcu-firmware
+- wget -d -v 'http://nodemcu-build.com/hook.php?event=start&recipient='${X_EMAIL//+/%2B}
+- git clone --depth=1 --branch=$X_BRANCH git://github.com/nodemcu/nodemcu-firmware.git nodemcu-firmware
 
 # dig in and modify those config files
 - cd nodemcu-firmware/app/include
@@ -32,7 +35,7 @@ before_install:
 # replace version strings in user_version.h
 - bash $TRAVIS_BUILD_DIR/set-version.sh
 # set the NODE_DEBUG and COAP_DEBUG flags in user_config.h
-- bash $TRAVIS_BUILD_DIR/set-debug.sh  
+- bash $TRAVIS_BUILD_DIR/set-debug.sh
 
 - cat user_modules.h
 - cat user_config.h
@@ -68,7 +71,7 @@ after_success:
 - rm -fr "$TRAVIS_BUILD_DIR/nodemcu-firmware"
 - ls -al
 - curl -T "{${file_name_float},${file_name_integer}}" -u ${FTP_USER}:${FTP_PASSWORD} --ftp-ssl -k ftp://82.195.224.128
-- wget -d -v 'http://nodemcu-build.com/hook.php?event=success&recipient='$X_EMAIL'&branch='$X_BRANCH'&modules='$X_MODULES'&artifacts='${file_name_float},${file_name_integer}
+- wget -d -v 'http://nodemcu-build.com/hook.php?event=success&recipient='${X_EMAIL//+/%2B}'&branch='$X_BRANCH'&modules='$X_MODULES'&artifacts='${file_name_float},${file_name_integer}
 
 env:
   global:
@@ -82,7 +85,7 @@ notifications:
     on_failure: always
   webhooks:
       urls:
-        - http://nodemcu-build.com/hook.php?event=failure&recipient=$X_EMAIL
+        - http://nodemcu-build.com/hook.php?event=failure&recipient=${X_EMAIL//+/%2B}
       on_success: never
       on_failure: always
       on_start: never
@@ -90,4 +93,4 @@ notifications:
 branches:
   only:
     - builds
-    - master 
+    - master
