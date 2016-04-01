@@ -7,7 +7,7 @@ addons:
     - srecord
 cache:
   directories:
-    - nodemcu-firmware/cache
+    - cache
 before_install:
 - cat build.config
 - export X_EMAIL=$(grep -E 'email=(.*)' build.config | cut -c 7-)
