@@ -48,7 +48,7 @@ before_install:
 - cat ucg_config.h
 - cat user_version.h
 # back to where we came from
-- cd $TRAVIS_BUILD_DIRx§
+- cd $TRAVIS_BUILD_DIR
 
 - cd nodemcu-firmware
 - ls -altr
