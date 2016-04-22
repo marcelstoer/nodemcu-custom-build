@@ -16,6 +16,7 @@ before_install:
 - export X_U8G_FONTS=$(grep -E 'u8g-fonts=(.*)' build.config | cut -c 11-)
 - export X_U8G_DISPLAY_I2C=$(grep -E 'u8g-display-i2c=(.*)' build.config | cut -c 17-)
 - export X_U8G_DISPLAY_SPI=$(grep -E 'u8g-display-spi=(.*)' build.config | cut -c 17-)
+- export X_UCG_DISPLAY_SPI=$(grep -E 'ucg-display-spi=(.*)' build.config | cut -c 17-)
 - export X_SSL_ENABLED=$(grep -E 'ssl-enabled=(.*)' build.config | cut -c 13-)
 - export X_DEBUG_ENABLED=$(grep -E 'debug-enabled=(.*)' build.config | cut -c 15-)
 # count ',' in the string and add +1
@@ -34,7 +35,7 @@ before_install:
 - bash $TRAVIS_BUILD_DIR/set-ssl.sh
 # replace fonts in u8g_config.h by the selected ones
 - bash $TRAVIS_BUILD_DIR/set-fonts.sh
-# set I2C/SPI displays in u8g_config.h
+# set I2C/SPI displays in u8g_config.h and ucg_config.h
 - bash $TRAVIS_BUILD_DIR/set-displays.sh
 # replace version strings in user_version.h
 - bash $TRAVIS_BUILD_DIR/set-version.sh
@@ -44,6 +45,7 @@ before_install:
 - cat user_modules.h
 - cat user_config.h
 - cat u8g_config.h
+- cat ucg_config.h
 - cat user_version.h
 # back to where we came from
 - cd $TRAVIS_BUILD_DIR
