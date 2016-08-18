@@ -79,11 +79,6 @@ after_success:
 - curl -T "{${file_name_float},${file_name_integer}}" -u ${FTP_USER}:${FTP_PASSWORD} --ftp-ssl -k ftp://sl61.web.hostpoint.ch
 - wget -d -v --tries=10 --timeout=15 --waitretry=30 --read-timeout=20 --retry-connrefused 'http://nodemcu-build.com/hook.php?event=success&recipient='${X_EMAIL//+/%2B}'&branch='$X_BRANCH'&modules='$X_MODULES'&artifacts='${file_name_float},${file_name_integer}
 
-env:
-  global:
-    secure: "eV784AT/XnRlOfqnopRBeOHC8hxxnEELikdgrvDkOrgRlgpTQB5E8qlp++DuVQKJT5UHBTozSqGkIlz8EkXlNA9kaP+/EqiOnyZV7Apxhr1tMH2blmJXrsPBsHASNuzq1Pi4leeNHbhtPf50NsvfleKpYYaSl90TpoO8ojolVwo="
-    secure: "mu3aNejhZPhP7GsejN8xYEGgDKtd0EoU/tKakSh8td10ArL6k5vhEym2qrona+WNJ2oFS8wWcZsPJWvjWBJasJH6butMJDD9D+rXA2S0pPe8kP0LOhrHYGMUVokejcMqMBndMhUHMBWW8wVwHERMWO0eOuRkIgoLD6hT6OOtYLA="
-
 notifications:
   email:
     recipients:
