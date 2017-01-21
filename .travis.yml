@@ -58,7 +58,8 @@ before_install:
 - cd nodemcu-firmware
 - ls -altr
 install:
-- tar -zxvf tools/esp-open-sdk.tar.gz
+#- tar -zxvf tools/esp-open-sdk.tar.gz
+- if [ -f ./esp-open-sdk.tar.xz ]; then tar -Jxvf esp-open-sdk.tar.xz; else tar -zxvf esp-open-sdk.tar.gz; fi
 - export PATH=$PATH:$PWD/esp-open-sdk/sdk:$PWD/esp-open-sdk/xtensa-lx106-elf/bin
 script:
 - make all
