@@ -5,7 +5,6 @@ git:
 addons:
   apt:
     packages:
-    - python-serial
     - srecord
 cache:
   directories:
@@ -58,10 +57,10 @@ before_install:
 - cd nodemcu-firmware
 - ls -altr
 install:
-#- tar -zxvf tools/esp-open-sdk.tar.gz
+- pip install --user pyserial
+script:
 - if [ -f tools/esp-open-sdk.tar.xz ]; then tar -Jxvf tools/esp-open-sdk.tar.xz; else tar -zxvf tools/esp-open-sdk.tar.gz; fi
 - export PATH=$PATH:$PWD/esp-open-sdk/sdk:$PWD/esp-open-sdk/xtensa-lx106-elf/bin
-script:
 - make all
 - cd bin/
 - timestamp=$(date "+%Y-%m-%d-%H-%M-%S")
