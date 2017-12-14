@@ -59,7 +59,7 @@ before_install:
 install:
 - pip install --user pyserial
 script:
-- if [ -f tools/esp-open-sdk.tar.xz ]; then tar -Jxvf tools/esp-open-sdk.tar.xz; else tar -zxvf tools/esp-open-sdk.tar.gz; fi
+- if [ -f tools/esp-open-sdk.tar.xz ]; then tar -Jxf tools/esp-open-sdk.tar.xz; else tar -zxf tools/esp-open-sdk.tar.gz; fi
 - export PATH=$PATH:$PWD/esp-open-sdk/sdk:$PWD/esp-open-sdk/xtensa-lx106-elf/bin
 - make all
 - cd bin/
