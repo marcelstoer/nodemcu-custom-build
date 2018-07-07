@@ -11,19 +11,22 @@ cache:
     - cache
 before_install:
 - cat build.config
-- export X_EMAIL=$(grep -E 'email=(.*)' build.config | cut -c 7-)
-- export X_BRANCH=$(grep -E 'branch=(.*)' build.config | cut -c 8-)
-- export X_MODULES=$(grep -E 'modules=(.*)' build.config | cut -c 9-)
-- export X_U8G_FONTS=$(grep -E 'u8g-fonts=(.*)' build.config | cut -c 11-)
-- export X_U8G_DISPLAY_I2C=$(grep -E 'u8g-display-i2c=(.*)' build.config | cut -c 17-)
-- export X_U8G_DISPLAY_SPI=$(grep -E 'u8g-display-spi=(.*)' build.config | cut -c 17-)
-- export X_UCG_DISPLAY_SPI=$(grep -E 'ucg-display-spi=(.*)' build.config | cut -c 17-)
-- export X_SSL_ENABLED=$(grep -E 'ssl-enabled=(.*)' build.config | cut -c 13-)
-- export X_DEBUG_ENABLED=$(grep -E 'debug-enabled=(.*)' build.config | cut -c 15-)
-- export X_FATFS_ENABLED=$(grep -E 'fatfs-enabled=(.*)' build.config | cut -c 15-)
-# count ',' in the string and add +1
-- export X_NUMBER_OF_MODULES=$((`echo $X_MODULES | tr -d -c ',' | wc -m`+1))
-- env | grep 'X_'
+
+- export X_EMAIL=$(grep -E '^email=' build.config | cut -f 2- -d '=')
+- export X_BRANCH=$(grep -E '^branch=' build.config | cut -f 2- -d '=')
+- export X_MODULES=$(grep -E '^modules=' build.config | cut -f 2- -d '=')
+- export X_U8G_FONTS=$(grep -E '^u8g-fonts=' build.config | cut -f 2- -d '=')
+- export X_U8G_DISPLAY_I2C=$(grep -E '^u8g-display-i2c=' build.config | cut -f 2- -d '=')
+- export X_U8G_DISPLAY_SPI=$(grep -E '^u8g-display-spi=' build.config | cut -f 2- -d '=')
+- export X_UCG_DISPLAY_SPI=$(grep -E '^ucg-display-spi=' build.config | cut -f 2- -d '=')
+- export X_LUA_FLASH_STORE=$(grep -E '^lfs-size=' build.config | cut -f 2- -d '=')
+- export X_SPIFFS_FIXED_LOCATION=$(grep -E '^spiffs-base=' build.config | cut -f 2- -d '=')
+- export X_SPIFFS_MAX_FILESYSTEM_SIZE=$(grep -E '^spiffs-size=' build.config | cut -f 2- -d '=')
+- export X_SSL_ENABLED=$(grep -E '^ssl-enabled=' build.config | cut -f 2- -d '=')
+- export X_DEBUG_ENABLED=$(grep -E '^debug-enabled=' build.config | cut -f 2- -d '=')
+- export X_FATFS_ENABLED=$(grep -E '^fatfs-enabled=' build.config | cut -f 2- -d '=')
+- export X_NUMBER_OF_MODULES=$(echo $X_MODULES | awk -F\, '{print NF}')
+- export -p | grep " X_"
 
 - wget -d -v -O/dev/null --tries=10 --timeout=15 --waitretry=30 --read-timeout=20 --retry-connrefused --no-check-certificate 'https://nodemcu-build.com/hook.php?event=start&recipient='${X_EMAIL//+/%2B}
 - git clone --depth=1 --branch=$X_BRANCH git://github.com/nodemcu/nodemcu-firmware.git nodemcu-firmware
@@ -33,12 +36,8 @@ before_install:
 
 # replace modules in user_modules.h by the selected ones
 - bash $TRAVIS_BUILD_DIR/set-modules.sh
-# comment the SSL flag in user_config.h if not enabled
-- bash $TRAVIS_BUILD_DIR/set-ssl.sh
-# set the NODE_DEBUG and COAP_DEBUG flags in user_config.h
-- bash $TRAVIS_BUILD_DIR/set-debug.sh
-# set the BUILD_FATFS flag in user_config.h
-- bash $TRAVIS_BUILD_DIR/set-fatfs.sh
+# set defines in user_config.h according to X_* variables
+- bash $TRAVIS_BUILD_DIR/set-config.sh
 # replace fonts in u8g_config.h by the selected ones
 - bash $TRAVIS_BUILD_DIR/set-fonts.sh
 # set I2C/SPI displays in u8g_config.h and ucg_config.h
@@ -101,3 +100,4 @@ branches:
   only:
     - builds
     - master
+
