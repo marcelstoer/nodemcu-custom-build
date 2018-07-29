@@ -29,7 +29,7 @@ before_install:
 - export -p | grep " X_"
 
 - wget -d -v -O/dev/null --tries=10 --timeout=15 --waitretry=30 --read-timeout=20 --retry-connrefused --no-check-certificate 'https://nodemcu-build.com/hook.php?event=start&recipient='${X_EMAIL//+/%2B}
-- git clone --depth=1 --branch=$X_BRANCH git://github.com/nodemcu/nodemcu-firmware.git nodemcu-firmware
+- git clone --depth=1 --branch=$X_BRANCH --recursive git://github.com/nodemcu/nodemcu-firmware.git nodemcu-firmware
 
 # dig in and modify those config files
 - cd nodemcu-firmware/app/include
