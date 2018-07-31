@@ -47,7 +47,7 @@ before_install:
 
 - cat user_modules.h
 - cat user_config.h
-- cat u8g_config.h
+- cat u8g*.h
 - cat ucg_config.h
 - cat user_version.h
 # back to where we came from
