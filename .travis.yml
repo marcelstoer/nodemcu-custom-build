@@ -58,7 +58,9 @@ before_install:
 install:
 - pip install --user pyserial
 script:
-- if [ -f tools/esp-open-sdk.tar.xz ]; then tar -Jxf tools/esp-open-sdk.tar.xz; else tar -zxf tools/esp-open-sdk.tar.gz; fi
+# https://github.com/nodemcu/nodemcu-firmware/pull/2545 removed the toolchain from the repository but the 1.5.4.1 branch
+# will always depend on it
+- if [ -f tools/esp-open-sdk.tar.xz ]; then tar -Jxf tools/esp-open-sdk.tar.xz; elif [ -f tools/esp-open-sdk.tar.gz ]; then tar -zxf tools/esp-open-sdk.tar.gz; fi
 - export PATH=$PATH:$PWD/esp-open-sdk/sdk:$PWD/esp-open-sdk/xtensa-lx106-elf/bin
 - make all
 - cd bin/
