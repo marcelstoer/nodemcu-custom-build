@@ -1,3 +1,7 @@
+# IDEA files
+.idea/**
+*.iml
+
 # Object files
 *.o
 *.ko
