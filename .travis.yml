@@ -81,8 +81,8 @@ after_success:
 - cp "$TRAVIS_BUILD_DIR/nodemcu-firmware/bin/${file_name_integer}" .
 - rm -fr "$TRAVIS_BUILD_DIR/nodemcu-firmware"
 - ls -al
-- transfersh_url_float=$(curl -H "Max-Days:2" --connect-timeout 10 --max-time 60 --retry 5 --retry-delay 10 --upload-file $file_name_float https://transfer.sh/$file_name_float)
-- transfersh_url_integer=$(curl -H "Max-Days:2" --connect-timeout 10 --max-time 60 --retry 5 --retry-delay 10 --upload-file $file_name_integer https://transfer.sh/$file_name_integer)
+- transfersh_url_float=$(curl -H "Max-Days:2" --connect-timeout 10 --max-time 120 --retry 5 --retry-delay 10 --upload-file $file_name_float https://transfer.sh/$file_name_float)
+- transfersh_url_integer=$(curl -H "Max-Days:2" --connect-timeout 10 --max-time 120 --retry 5 --retry-delay 10 --upload-file $file_name_integer https://transfer.sh/$file_name_integer)
 - wget -d -v -O/dev/null --tries=10 --timeout=15 --waitretry=30 --read-timeout=20 --retry-connrefused --no-check-certificate 'https://nodemcu-build.com/hook.php?event=success&recipient='${X_EMAIL//+/%2B}'&branch='$X_BRANCH'&modules='$X_MODULES'&transfersh-urls='${transfersh_url_float},${transfersh_url_integer}
 
 notifications:
