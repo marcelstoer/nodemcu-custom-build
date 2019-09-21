@@ -13,7 +13,6 @@
 #
 set -e
 
-# Only process LUA_FLASH_STORE and SPIFFS commands if SDK 2.x (no PARTITIONS defined)
 # What is carried in the following variables is the sed replacement expression.
 # It makes all #defines commented by default.
 declare         lfs="// #\\1"
