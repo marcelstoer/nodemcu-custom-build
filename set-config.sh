@@ -4,9 +4,9 @@
 # corresponding env X_???? variable.
 #
 #  Define                  Uncomment if param        Set to param   SDK3.0 ?
-#  LUA_FLASH_STORE                >0                      Y           N
-#  SPIFFS_FIXED_LOCATION          >0                      Y           N
-#  SPIFFS_MAX_FILESYSTEM_SIZE     >0                      Y           N
+#  LUA_FLASH_STORE                >0                      Y           Y
+#  SPIFFS_FIXED_LOCATION          >0                      Y           Y
+#  SPIFFS_MAX_FILESYSTEM_SIZE     >0                      Y           Y
 #  BUILD_FATFS                  "true"                                Y
 #  DEVELOP_VERSION              "true"                                Y
 #  SSL_ENABLED                  "true"                                Y
@@ -14,7 +14,6 @@
 set -e
 
 # Only process LUA_FLASH_STORE and SPIFFS commands if SDK 2.x (no PARTITIONS defined)
-
 # What is carried in the following variables is the sed replacement expression.
 # It makes all #defines commented by default.
 declare         lfs="// #\\1"
