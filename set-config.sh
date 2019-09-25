@@ -69,3 +69,8 @@ sed -e "s!^.*\\(define *BUILD_FATFS\\).*!$fatfs!" \
     user_config.h > user_config.h.new;
 mv user_config.h.new user_config.h;
 
+# Set the flash to autosize from which ever value the firmware developers chose
+# as a default.
+echo "Setting flash size to 'auto'"
+sed "s/#define FLASH_.*/#define FLASH_AUTOSIZE/g" user_config.h > user_config.h.new;
+mv user_config.h.new user_config.h;
