@@ -13,6 +13,7 @@ cache:
 before_install:
 - cat build.config
 
+- export USER_PROLOG="built on nodemcu-build.com provided by frightanic.com"
 - export X_EMAIL=$(grep -E '^email=' build.config | cut -f 2- -d '=')
 - export X_BRANCH=$(grep -E '^branch=' build.config | cut -f 2- -d '=')
 - export X_MODULES=$(grep -E '^modules=' build.config | cut -f 2- -d '=')
