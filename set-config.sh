@@ -3,7 +3,7 @@
 # user_config.h has a number of defines the are replaced according to their
 # corresponding env X_???? variable.
 #
-#  Define                  Uncomment if param        Set to param   SDK3.0 ?
+#  Define                  Uncomment if param        Set to param   SDK3.0
 #  LUA_FLASH_STORE                >0                      Y           Y
 #  SPIFFS_FIXED_LOCATION          >0                      Y           Y
 #  SPIFFS_MAX_FILESYSTEM_SIZE     >0                      Y           Y
@@ -13,39 +13,30 @@
 #
 set -e
 
-# What is carried in the following variables is the sed replacement expression.
-# It makes all #defines commented by default.
-declare         lfs="// #\\1"
-declare spiffs_base="// #\\1"
-declare spiffs_size="// #\\1"
-
-#if env var exists and is not "0"
+#if env var exists and is not "0" then overwrite default
 if [ -n "${X_LUA_FLASH_STORE}" ] && [ "${X_LUA_FLASH_STORE}" != "0" ]; then
   printf "Enabling LFS, size = %s\\n" "${X_LUA_FLASH_STORE}"
-  lfs="#\\1 ${X_LUA_FLASH_STORE}"
+  sed -e "s!^//\\(#define LUA_FLASH_STORE\\).*!\\1 ${X_LUA_FLASH_STORE}!" user_config.h > user_config.h.new;
+  mv user_config.h.new user_config.h;
 fi
 
 if [ -n "${X_SPIFFS_FIXED_LOCATION}" ] && [ "${X_SPIFFS_FIXED_LOCATION}" != "0" ]; then
   printf "SPIFFS location offset = %s\\n" "${X_SPIFFS_FIXED_LOCATION}"
-  spiffs_base="#\\1 ${X_SPIFFS_FIXED_LOCATION}"
+  sed "s!^\\(#define SPIFFS_FIXED_LOCATION\\).*!\\1 ${X_SPIFFS_FIXED_LOCATION}!" user_config.h > user_config.h.new;
+  mv user_config.h.new user_config.h;
 fi
 
 if [ -n "${X_SPIFFS_MAX_FILESYSTEM_SIZE}" ] && [ "${X_SPIFFS_MAX_FILESYSTEM_SIZE}" != "0" ]; then
   printf "SPIFFS size = %s\\n" "${X_SPIFFS_MAX_FILESYSTEM_SIZE}"
-  spiffs_size="#\\1 ${X_SPIFFS_MAX_FILESYSTEM_SIZE}"
+  sed "s!^//\\(#define SPIFFS_MAX_FILESYSTEM_SIZE\\).*!\\1 ${X_SPIFFS_MAX_FILESYSTEM_SIZE}!" user_config.h > user_config.h.new;
+  mv user_config.h.new user_config.h;
 fi
-# Do sed via temp file for macOS compatability
-sed -e "s!^.*\\(define *LUA_FLASH_STORE\\).*!$lfs!" \
-    -e "s!^.*\\(define *SPIFFS_FIXED_LOCATION\\).*!$spiffs_base!" \
-    -e "s!^.*\\(define *SPIFFS_MAX_FILESYSTEM_SIZE\\).*!$spiffs_size!" \
-    user_config.h > user_config.h.new;
-mv user_config.h.new user_config.h;
 
 # What is carried in the following variables is the sed replacement expression.
 # It makes all #defines commented by default.
-declare       fatfs="// #\\1"
-declare       debug="// #\\1"
-declare         ssl="// #\\1"
+declare       fatfs="//#\\1"
+declare       debug="//#\\1"
+declare         ssl="//#\\1"
 
 if [ "${X_DEBUG_ENABLED}" == "true" ]; then
   echo "Enabling debug mode"
@@ -72,5 +63,5 @@ mv user_config.h.new user_config.h;
 # Set the flash to autosize from which ever value the firmware developers chose
 # as a default.
 echo "Setting flash size to 'auto'"
-sed "s/#define FLASH_.*/#define FLASH_AUTOSIZE/g" user_config.h > user_config.h.new;
+sed "s/#define FLASH_.*/#define FLASH_AUTOSIZE/" user_config.h > user_config.h.new;
 mv user_config.h.new user_config.h;
