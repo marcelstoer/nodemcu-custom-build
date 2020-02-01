@@ -44,6 +44,7 @@ script:
 
 after_success:
   - cd $TRAVIS_BUILD_DIR
+  - ls -alrt nodemcu-firmware/bin
   - file_name_float=$(find nodemcu-firmware/bin -name "*float*.bin" -type f -exec basename {} \;)
   - file_name_integer=$(find nodemcu-firmware/bin -name "*integer*.bin" -type f -exec basename {} \;)
   - cp nodemcu-firmware/bin/"${file_name_float}" nodemcu-firmware/bin/"${file_name_integer}" .
