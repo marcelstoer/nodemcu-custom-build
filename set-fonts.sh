@@ -2,15 +2,13 @@
 
 set -e
 
-if [ "${X_U8G_FONTS}" = "" ]; then
-  X_U8G_FONTS_STRING=' '
-  export X_U8G_FONTS_STRING
+if [ "${X_U8G_FONTS}" == "" ]; then
+  export X_U8G_FONTS_STRING=' '
 else
   if test -e "u8g_config.h"; then
     # replace ',' by newline and turn every item into '    U8G_FONT_TABLE_ENTRY(<font-name>) \' (except
     # the one on the last line which mustn't have the '\'
-    X_U8G_FONTS_STRING=$(echo "$X_U8G_FONTS" | tr , '\n' | perl -pe 'my $break = (eof) ? "" : "\\"; s/(.*)\n/    U8G_FONT_TABLE_ENTRY($1) $break\n/g')
-    export X_U8G_FONTS_STRING
+    export X_U8G_FONTS_STRING=$(echo $X_U8G_FONTS | tr , '\n' | perl -pe 'my $break = (eof) ? "" : "\\"; s/(.*)\n/    U8G_FONT_TABLE_ENTRY($1) $break\n/g')
 
     # inject the fonts string into u8g_config.h between '#define U8G_FONT_TABLE \\n' and '\n#undef U8G_FONT_TABLE_ENTRY'
     # the 's' flag in '/sg' makes . match newlines

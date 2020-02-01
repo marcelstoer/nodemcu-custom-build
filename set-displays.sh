@@ -5,7 +5,7 @@ set -e
 # replace default U8G and U8G2 I2C/SPI displays with the selected ones
 # sed inline in-place editing (-i) isn't used because OS X would require different syntax http://stackoverflow.com/q/22521207/131929
 
-if [ "${X_U8G_DISPLAY_I2C}" = "" ]; then
+if [ "${X_U8G_DISPLAY_I2C}" == "" ]; then
   # one *could* delete the default entry if no display is selected...
   # sed "/^ *U8G_DISPLAY_TABLE_ENTRY.*i2c)/d" u8g_config.h
   :
@@ -23,7 +23,7 @@ EOF
   fi
 fi
 
-if [ "${X_U8G_DISPLAY_SPI}" = "" ]; then
+if [ "${X_U8G_DISPLAY_SPI}" == "" ]; then
   # one *could* delete the default entry if no display is selected...
   # sed "/^ *U8G_DISPLAY_TABLE_ENTRY.*spi)/d" u8g_config.h
   :
@@ -44,7 +44,7 @@ fi
 
 # replace default UCG SPI displays with the selected one
 
-if [ "${X_UCG_DISPLAY_SPI}" = "" ]; then
+if [ "${X_UCG_DISPLAY_SPI}" == "" ]; then
   # one *could* delete the default entry if no display is selected...
   # sed "/^ *UCG_DISPLAY_TABLE_ENTRY.*)/d" ucg_config.h
   :
