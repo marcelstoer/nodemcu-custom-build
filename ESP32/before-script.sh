@@ -10,23 +10,43 @@ echo "Running 'before_script' for ESP32"
   # select modules
   # ---------------------------------------------------------------------------
   # disable all modules
-  sed -ri 's/(CONFIG_LUA_MODULE_.*=).{0,1}/\1n/' sdkconfig
+  sed -ri 's/(CONFIG_LUA_MODULE_.*=).{0,1}/\1/' sdkconfig
   # enable the selected ones
   echo "Enabling modules $X_MODULES"
   mapfile -t modules < <(echo "$X_MODULES" | tr , '\n' | tr '[:lower:]' '[:upper:]')
   for m in "${modules[@]}"; do
-    sed -ri "s/(CONFIG_LUA_MODULE_$m=)n/\1y/" sdkconfig
+    sed -ri "s/(CONFIG_LUA_MODULE_$m=)/\1y/" sdkconfig
   done
 
   # ---------------------------------------------------------------------------
   # set SSL/TLS
   # ---------------------------------------------------------------------------
   if [ "${X_SSL_ENABLED}" == "true" ]; then
-    echo "Enabling SSL/TLS"
-    sed -ri 's/(CONFIG_MBEDTLS_TLS_ENABLED=).*/\1y/' sdkconfig
+    echo "Enabling SSL/TLS for mbed TLS and MQTT"
+    sed -ri 's/(CONFIG_MBEDTLS_TLS_ENABLED=).{0,1}/\1y/' sdkconfig
+    sed -ri 's/(CONFIG_MQTT_TRANSPORT_SSL=).{0,1}/\1y/' sdkconfig
   else
-    echo "Disabling SSL/TLS"
-    sed -ri 's/(CONFIG_MBEDTLS_TLS_ENABLED=).*/\1n/' sdkconfig
+    echo "Disabling SSL/TLS for mbed TLS and MQTT"
+    sed -ri 's/(CONFIG_MBEDTLS_TLS_ENABLED=).{0,1}/\1/' sdkconfig
+    sed -ri 's/(CONFIG_MQTT_TRANSPORT_SSL=).{0,1}/\1/' sdkconfig
+  fi
+
+  # ---------------------------------------------------------------------------
+  # set FatFS i.e. enable the SDMMC module in case the user forgot
+  # ---------------------------------------------------------------------------
+  if [ "${X_FATFS_ENABLED}" == "true" ]; then
+    echo "Enabling FatFS/SDMMC"
+    sed -ri "s/(CONFIG_LUA_MODULE_SDMMC=).{0,1}/\1y/" sdkconfig
+  fi
+
+  # ---------------------------------------------------------------------------
+  # set debug mode/level
+  # ---------------------------------------------------------------------------
+  if [ "${X_DEBUG_ENABLED}" == "true" ]; then
+    echo "Enabling debug mode"
+    sed -ri "s/(CONFIG_LOG_DEFAULT_LEVEL_INFO=).{0,1}/\1/" sdkconfig
+    sed -ri "s/(CONFIG_LOG_DEFAULT_LEVEL_DEBUG=).{0,1}/\1y/" sdkconfig
+    sed -ri "s/(CONFIG_LOG_DEFAULT_LEVEL=).{0,1}/\14/" sdkconfig
   fi
 
   cat sdkconfig
