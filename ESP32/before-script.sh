@@ -10,12 +10,12 @@ echo "Running 'before_script' for ESP32"
   # select modules
   # ---------------------------------------------------------------------------
   # disable all modules
-  sed -ri 's/(CONFIG_LUA_MODULE_.*=).{0,1}/\1/' sdkconfig
+  sed -ri 's/(CONFIG_NODEMCU_CMODULE_.*=).{0,1}/\1/' sdkconfig
   # enable the selected ones
   echo "Enabling modules $X_MODULES"
   mapfile -t modules < <(echo "$X_MODULES" | tr , '\n' | tr '[:lower:]' '[:upper:]')
   for m in "${modules[@]}"; do
-    sed -ri "s/(CONFIG_LUA_MODULE_$m=)/\1y/" sdkconfig
+    sed -ri "s/(CONFIG_NODEMCU_CMODULE_$m=)/\1y/" sdkconfig
   done
 
   # ---------------------------------------------------------------------------
@@ -36,7 +36,7 @@ echo "Running 'before_script' for ESP32"
   # ---------------------------------------------------------------------------
   if [ "${X_FATFS_ENABLED}" == "true" ]; then
     echo "Enabling FatFS/SDMMC"
-    sed -ri "s/(CONFIG_LUA_MODULE_SDMMC=).{0,1}/\1y/" sdkconfig
+    sed -ri "s/(CONFIG_NODEMCU_CMODULE_SDMMC=).{0,1}/\1y/" sdkconfig
   fi
 
   # ---------------------------------------------------------------------------
