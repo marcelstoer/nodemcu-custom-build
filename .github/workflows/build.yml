@@ -1,0 +1,35 @@
+name: NodeMCU Custom Build
+
+on: push
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  # Set the job key. The key is displayed as the job name
+  # when a job name is not provided
+  build-custom-firmware:
+    name: Build custom firmware
+    runs-on: ubuntu-16.04
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Cache the 'cache' dir
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-artifacts
+        with:
+          path: ./cache
+          key: ${{ runner.os }}
+      - name: Install APT dependencies
+        run: sudo apt install python-serial srecord gperf
+      - name: Dump the build config
+        run: cat build.config
+      # When you run a script it gets its own shell and its own environment, which disappear again as soon as the
+      # script is finished. To keep the environment variables around, source the script into your current shell.
+      - name: Trigger sending the start-build email
+        run: |
+          source ./export-env-vars.sh
+          wget -d -v -O/dev/null --tries=10 --timeout=15 --waitretry=30 --read-timeout=20 --retry-connrefused 'https://nodemcu-build.com/hook.php?event=start&recipient='${X_EMAIL//+/%2B}
