@@ -54,3 +54,8 @@ jobs:
           source ./.env-vars
           cd nodemcu-firmware
           if [ "$X_BRANCH" = "dev-esp32" ]; then bash "$GITHUB_WORKSPACE"/ESP32/before-script.sh; else bash "$GITHUB_WORKSPACE"/ESP8266/before-script.sh; fi
+      - name: Run script.sh
+        run: |
+          source ./.env-vars
+          cd nodemcu-firmware
+          if [ "$X_BRANCH" = "dev-esp32" ]; then bash "$GITHUB_WORKSPACE"/ESP32/script.sh; else bash "$GITHUB_WORKSPACE"/ESP8266/script.sh; fi
