@@ -42,3 +42,15 @@ jobs:
           source ./.env-vars
           git clone --depth=1 --branch=$X_BRANCH --recursive git://github.com/nodemcu/nodemcu-firmware.git nodemcu-firmware
           ls -alrt
+          cd nodemcu-firmware
+          ls -altr
+      - name: Run install.sh
+        run: |
+          source ./.env-vars
+          cd nodemcu-firmware
+          if [ "$X_BRANCH" = "dev-esp32" ]; then bash "$GITHUB_WORKSPACE"/ESP32/install.sh; else bash "$GITHUB_WORKSPACE"/ESP8266/install.sh; fi
+      - name: Run before-script.sh
+        run: |
+          source ./.env-vars
+          cd nodemcu-firmware
+          if [ "$X_BRANCH" = "dev-esp32" ]; then bash "$GITHUB_WORKSPACE"/ESP32/before-script.sh; else bash "$GITHUB_WORKSPACE"/ESP8266/before-script.sh; fi
