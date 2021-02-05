@@ -28,13 +28,17 @@ jobs:
       - name: Dump the build config
         run: cat build.config
       # When you run a script it gets its own shell and its own environment, which disappear again as soon as the
-      # script is finished. To keep the environment variables around, source the script into your current shell.
+      # script is finished. Besides, each step uses its own environment with no shared global space for dynamic env
+      # variables. Work-around: write "export FOO=bar" entries to ~/.bashrc which should get sourced in every step.
+      # Idea: https://github.com/actions/starter-workflows/issues/68#issuecomment-642514933
+      - name: Prepare environment variables
+        run: ./export-env-vars.sh
       - name: Trigger sending the start-build email
         run: |
-          source ./export-env-vars.sh
+          source ./.env-vars
           wget -d -v -O/dev/null --tries=10 --timeout=15 --waitretry=30 --read-timeout=20 --retry-connrefused 'https://nodemcu-build.com/hook.php?event=start&recipient='${X_EMAIL//+/%2B}
       - name: Clone NodeMCU repo
         run: |
-          source ./export-env-vars.sh
+          source ./.env-vars
           git clone --depth=1 --branch=$X_BRANCH --recursive git://github.com/nodemcu/nodemcu-firmware.git nodemcu-firmware
           ls -alrt
