@@ -16,13 +16,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Cache the 'cache' dir
-        uses: actions/cache@v2
-        env:
-          cache-name: cache-artifacts
-        with:
-          path: ./cache
-          key: ${{ runner.os }}
       - name: Install APT dependencies
         run: sudo apt install python-serial srecord gperf
       - name: Dump the build config
@@ -44,6 +37,13 @@ jobs:
           ls -alrt
           cd nodemcu-firmware
           ls -altr
+      - name: Cache the 'cache' dir
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-artifacts
+        with:
+          path: ./nodemcu-firmware/cache
+          key: ${{ runner.os }}
       - name: Run install.sh
         run: |
           source ./.env-vars
