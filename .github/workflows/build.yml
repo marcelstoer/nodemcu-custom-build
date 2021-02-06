@@ -7,12 +7,8 @@ defaults:
     shell: bash
 
 jobs:
-  # Set the job key. The key is displayed as the job name
-  # when a job name is not provided
-  build-custom-firmware:
-    name: Build custom firmware
+  build:
     runs-on: ubuntu-16.04
-
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -59,3 +55,25 @@ jobs:
           source ./.env-vars
           cd nodemcu-firmware
           if [ "$X_BRANCH" = "dev-esp32" ]; then bash "$GITHUB_WORKSPACE"/ESP32/script.sh; else bash "$GITHUB_WORKSPACE"/ESP8266/script.sh; fi
+      - name: Archive firmware binaries and configuration
+        uses: actions/upload-artifact@v2
+        with:
+          name: artifacts-and-configuration
+          path: |
+            ./.env-vars
+            nodemcu-firmware/bin/**
+          retention-days: 5
+
+  upload:
+    needs: build
+    runs-on: ubuntu-16.04
+    steps:
+      - name: Download all workflow run artifacts
+        uses: actions/download-artifact@v2
+
+  notify:
+    needs: upload
+    runs-on: ubuntu-16.04
+    steps:
+      - name: Download all workflow run artifacts
+        uses: actions/download-artifact@v2
