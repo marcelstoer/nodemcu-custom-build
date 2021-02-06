@@ -18,7 +18,7 @@ jobs:
         run: cat build.config
       # When you run a script it gets its own shell and its own environment, which disappear again as soon as the
       # script is finished. Besides, each step uses its own environment with no shared global space for dynamic env
-      # variables. Work-around: write "export FOO=bar" entries to ~/.bashrc which should get sourced in every step.
+      # variables. Work-around: write "export FOO=bar" entries to a file and source it in every step that needs those.
       # Idea: https://github.com/actions/starter-workflows/issues/68#issuecomment-642514933
       - name: Prepare environment variables
         run: ./export-env-vars.sh
@@ -70,6 +70,16 @@ jobs:
     steps:
       - name: Download all workflow run artifacts
         uses: actions/download-artifact@v2
+      - name: Archive binaries on nodemcu-build.com
+        env:
+          TOKEN: ${{ secrets.ARCHIVER_TOKEN }}
+        run: |
+          file_name_float=$(find nodemcu-firmware/bin -name "*float*.bin" -type f -exec basename {} \;)
+          file_name_integer=$(find nodemcu-firmware/bin -name "*integer*.bin" -type f -exec basename {} \;)
+          cp nodemcu-firmware/bin/"${file_name_float}" nodemcu-firmware/bin/"${file_name_integer}" .
+          ls -alrt
+          curl --connect-timeout 10 --max-time 120 --retry 5 --retry-delay 10 -F token=$TOKEN -F file=@$file_name_float https://nodemcu-build.com/archiver.php
+          curl --connect-timeout 10 --max-time 120 --retry 5 --retry-delay 10 -F token=$TOKEN -F file=@$file_name_integer https://nodemcu-build.com/archiver.php
 
   notify:
     needs: upload
