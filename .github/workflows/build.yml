@@ -55,29 +55,38 @@ jobs:
           source ./.env-vars
           cd nodemcu-firmware
           if [ "$X_BRANCH" = "dev-esp32" ]; then bash "$GITHUB_WORKSPACE"/ESP32/script.sh; else bash "$GITHUB_WORKSPACE"/ESP8266/script.sh; fi
-      - name: Archive firmware binaries and configuration
+      - name: Archive firmware binaries
         uses: actions/upload-artifact@v2
         with:
-          name: artifacts-and-configuration
-          path: |
-            ./.env-vars
-            nodemcu-firmware/bin/**
+          name: bin-folder
+          path: nodemcu-firmware/bin
+          retention-days: 5
+      - name: Archive configuration (env-vars file)
+        uses: actions/upload-artifact@v2
+        with:
+          name: env-vars
+          path: ./.env-vars
           retention-days: 5
 
   upload:
     needs: build
     runs-on: ubuntu-16.04
     steps:
-      - name: Download all workflow run artifacts
+      - name: Download binaries for build job
         uses: actions/download-artifact@v2
+        with:
+          name: bin-folder
+      - name: Download configuration for build job
+        uses: actions/download-artifact@v2
+        with:
+          name: env-vars
       - name: Archive binaries on nodemcu-build.com
         env:
           TOKEN: ${{ secrets.ARCHIVER_TOKEN }}
         run: |
-          file_name_float=$(find nodemcu-firmware/bin -name "*float*.bin" -type f -exec basename {} \;)
-          file_name_integer=$(find nodemcu-firmware/bin -name "*integer*.bin" -type f -exec basename {} \;)
-          cp nodemcu-firmware/bin/"${file_name_float}" nodemcu-firmware/bin/"${file_name_integer}" .
           ls -alrt
+          file_name_float=$(find . -name "nodemcu-*float*.bin" -type f -exec basename {} \;)
+          file_name_integer=$(find . -name "nodemcu-*integer*.bin" -type f -exec basename {} \;)
           curl --connect-timeout 10 --max-time 120 --retry 5 --retry-delay 10 -F token=$TOKEN -F file=@$file_name_float https://nodemcu-build.com/archiver.php
           curl --connect-timeout 10 --max-time 120 --retry 5 --retry-delay 10 -F token=$TOKEN -F file=@$file_name_integer https://nodemcu-build.com/archiver.php
 
