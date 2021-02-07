@@ -1,6 +1,14 @@
 name: NodeMCU Custom Build
 
-on: push
+on:
+  push:
+    branches:
+      - master
+      - builds
+  pull_request:
+    branches:
+      - master
+      - builds
 
 defaults:
   run:
@@ -101,12 +109,33 @@ jobs:
   notify:
     needs: upload
     runs-on: ubuntu-16.04
+    if: always()
     steps:
+      # You can get conclusion via ${{ env.WORKFLOW_CONCLUSION }} # neutral, success, skipped, cancelled, timed_out, action_required, failure
+      - uses: technote-space/workflow-conclusion-action@v2
       - name: Download artifact '.env-vars' from build and upload jobs
         uses: actions/download-artifact@v2
         with:
           name: env-vars
-      - name: Trigger sending success email
+      - name: Trigger sending success email to author
+        if: env.WORKFLOW_CONCLUSION == 'success'
         run: |
           source ./.env-vars
           wget -d -v -O/dev/null --tries=10 --timeout=15 --waitretry=30 --read-timeout=20 --retry-connrefused 'https://nodemcu-build.com/hook.php?event=success&recipient='${X_EMAIL//+/%2B}'&branch='$X_BRANCH'&modules='$X_MODULES'&artifacts='${file_name_float},${file_name_integer}
+      - name: Trigger sending failure email to author
+        if: env.WORKFLOW_CONCLUSION == 'failure'
+        run: |
+          source ./.env-vars
+          wget -d -v -O/dev/null --tries=10 --timeout=15 --waitretry=30 --read-timeout=20 --retry-connrefused 'https://nodemcu-build.com/hook.php?event=failure&recipient='${X_EMAIL//+/%2B}
+      - name: Send mail to myself
+        if: env.WORKFLOW_CONCLUSION == 'failure'
+        uses: dawidd6/action-send-mail@v2
+        with:
+          server_address: asmtp.mail.hostpoint.ch
+          server_port: 465
+          username: ${{ secrets.EMAIL_USERNAME }}
+          password: ${{ secrets.EMAIL_PASSWORD }}
+          subject: NodeMCU custom build failed
+          body: ${{ github.job }} job in worflow ${{ github.workflow }} of ${{ github.repository }} has ${{ job.status }}
+          to: info@nodemcu-build.com
+          from: GitHub Actions
