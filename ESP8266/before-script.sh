@@ -4,7 +4,7 @@ set -e
 
 echo "Running 'before_script' for ESP8266"
 (
-  SCRIPT_DIR=$TRAVIS_BUILD_DIR/ESP8266
+  SCRIPT_DIR=$GITHUB_WORKSPACE/ESP8266
 
   # dig in and modify those config files
   cd app/include || exit
@@ -27,5 +27,5 @@ echo "Running 'before_script' for ESP8266"
   cat user_version.h
 
   # back to where we came from
-  cd "$TRAVIS_BUILD_DIR" || exit
+  cd "$GITHUB_WORKSPACE" || exit
 )
