@@ -55,13 +55,13 @@ jobs:
           source ./.env-vars
           cd nodemcu-firmware
           if [ "$X_BRANCH" = "dev-esp32" ]; then bash "$GITHUB_WORKSPACE"/ESP32/script.sh; else bash "$GITHUB_WORKSPACE"/ESP8266/script.sh; fi
-      - name: Archive firmware binaries
+      - name: Upload artifacts in 'nodemcu-firmware/bin'
         uses: actions/upload-artifact@v2
         with:
           name: bin-folder
           path: nodemcu-firmware/bin
           retention-days: 5
-      - name: Archive configuration (env-vars file)
+      - name: Upload artifact '.env-vars'
         uses: actions/upload-artifact@v2
         with:
           name: env-vars
@@ -72,11 +72,11 @@ jobs:
     needs: build
     runs-on: ubuntu-16.04
     steps:
-      - name: Download binaries for build job
+      - name: Download binaries from build job
         uses: actions/download-artifact@v2
         with:
           name: bin-folder
-      - name: Download configuration for build job
+      - name: Download configuration from build job
         uses: actions/download-artifact@v2
         with:
           name: env-vars
@@ -87,12 +87,26 @@ jobs:
           ls -alrt
           file_name_float=$(find . -name "nodemcu-*float*.bin" -type f -exec basename {} \;)
           file_name_integer=$(find . -name "nodemcu-*integer*.bin" -type f -exec basename {} \;)
+          echo "export file_name_float=""$file_name_float""" >> ./.env-vars
+          echo "export file_name_integer=""$file_name_integer""" >> ./.env-vars
           curl --connect-timeout 10 --max-time 120 --retry 5 --retry-delay 10 -F token=$TOKEN -F file=@$file_name_float https://nodemcu-build.com/archiver.php
           curl --connect-timeout 10 --max-time 120 --retry 5 --retry-delay 10 -F token=$TOKEN -F file=@$file_name_integer https://nodemcu-build.com/archiver.php
+      - name: Upload artifact '.env-vars'
+        uses: actions/upload-artifact@v2
+        with:
+          name: env-vars
+          path: ./.env-vars
+          retention-days: 5
 
   notify:
     needs: upload
     runs-on: ubuntu-16.04
     steps:
-      - name: Download all workflow run artifacts
+      - name: Download configuration from build and upload jobs
         uses: actions/download-artifact@v2
+        with:
+          name: env-vars
+      - name: Trigger sending success email
+        run: |
+          source ./.env-vars
+          wget -d -v -O/dev/null --tries=10 --timeout=15 --waitretry=30 --read-timeout=20 --retry-connrefused 'https://nodemcu-build.com/hook.php?event=success&recipient='${X_EMAIL//+/%2B}'&branch='$X_BRANCH'&modules='$X_MODULES'&artifacts='${file_name_float},${file_name_integer}
