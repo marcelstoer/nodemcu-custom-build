@@ -1,0 +1,141 @@
+name: NodeMCU Custom Build
+
+on:
+  push:
+    branches:
+      - master
+      - builds
+  pull_request:
+    branches:
+      - master
+      - builds
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  build:
+    runs-on: ubuntu-16.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Install APT dependencies
+        run: sudo apt install python-serial srecord gperf
+      - name: Log the build config
+        run: cat build.config
+      # When you run a script it gets its own shell and its own environment, which disappear again as soon as the
+      # script is finished. Besides, each step uses its own environment with no shared global space for dynamic env
+      # variables. Work-around: write "export FOO=bar" entries to a file and source it in every step that needs those.
+      # Idea: https://github.com/actions/starter-workflows/issues/68#issuecomment-642514933
+      - name: Prepare environment variables
+        run: ./export-env-vars.sh
+      - name: Trigger sending the start-build email
+        run: |
+          source ./.env-vars
+          wget -d -v -O/dev/null --tries=10 --timeout=15 --waitretry=30 --read-timeout=20 --retry-connrefused 'https://nodemcu-build.com/hook.php?event=start&recipient='${X_EMAIL//+/%2B}
+      - name: Clone NodeMCU repo
+        run: |
+          source ./.env-vars
+          git clone --depth=1 --branch=$X_BRANCH --recursive git://github.com/nodemcu/nodemcu-firmware.git nodemcu-firmware
+          ls -alrt
+          cd nodemcu-firmware
+          ls -altr
+      - name: Cache the 'cache' dir
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-artifacts
+        with:
+          path: ./nodemcu-firmware/cache
+          key: ${{ runner.os }}
+      - name: Run install.sh
+        run: |
+          source ./.env-vars
+          cd nodemcu-firmware
+          if [ "$X_BRANCH" = "dev-esp32" ]; then bash "$GITHUB_WORKSPACE"/ESP32/install.sh; else bash "$GITHUB_WORKSPACE"/ESP8266/install.sh; fi
+      - name: Run before-script.sh
+        run: |
+          source ./.env-vars
+          cd nodemcu-firmware
+          if [ "$X_BRANCH" = "dev-esp32" ]; then bash "$GITHUB_WORKSPACE"/ESP32/before-script.sh; else bash "$GITHUB_WORKSPACE"/ESP8266/before-script.sh; fi
+      - name: Run script.sh
+        run: |
+          source ./.env-vars
+          cd nodemcu-firmware
+          if [ "$X_BRANCH" = "dev-esp32" ]; then bash "$GITHUB_WORKSPACE"/ESP32/script.sh; else bash "$GITHUB_WORKSPACE"/ESP8266/script.sh; fi
+      - name: Upload artifacts in 'nodemcu-firmware/bin'
+        uses: actions/upload-artifact@v2
+        with:
+          name: bin-folder
+          path: nodemcu-firmware/bin
+          retention-days: 5
+      - name: Upload artifact '.env-vars'
+        uses: actions/upload-artifact@v2
+        with:
+          name: env-vars
+          path: ./.env-vars
+          retention-days: 5
+
+  upload:
+    needs: build
+    runs-on: ubuntu-16.04
+    steps:
+      - name: Download artifacts 'nodemcu-firmware/bin' from build job
+        uses: actions/download-artifact@v2
+        with:
+          name: bin-folder
+      - name: Download artifact '.env-vars' from build job
+        uses: actions/download-artifact@v2
+        with:
+          name: env-vars
+      - name: Archive binaries on nodemcu-build.com
+        env:
+          TOKEN: ${{ secrets.ARCHIVER_TOKEN }}
+        run: |
+          ls -alrt
+          file_name_float=$(find . -name "nodemcu-*float*.bin" -type f -exec basename {} \;)
+          file_name_integer=$(find . -name "nodemcu-*integer*.bin" -type f -exec basename {} \;)
+          echo "export file_name_float=""$file_name_float""" >> ./.env-vars
+          echo "export file_name_integer=""$file_name_integer""" >> ./.env-vars
+          curl --connect-timeout 10 --max-time 120 --retry 5 --retry-delay 10 -F token=$TOKEN -F file=@$file_name_float https://nodemcu-build.com/archiver.php
+          curl --connect-timeout 10 --max-time 120 --retry 5 --retry-delay 10 -F token=$TOKEN -F file=@$file_name_integer https://nodemcu-build.com/archiver.php
+      - name: Upload artifact '.env-vars'
+        uses: actions/upload-artifact@v2
+        with:
+          name: env-vars
+          path: ./.env-vars
+          retention-days: 5
+
+  notify:
+    needs: upload
+    runs-on: ubuntu-16.04
+    if: always()
+    steps:
+      # You can get conclusion via ${{ env.WORKFLOW_CONCLUSION }} # neutral, success, skipped, cancelled, timed_out, action_required, failure
+      - uses: technote-space/workflow-conclusion-action@v2
+      - name: Download artifact '.env-vars' from build and upload jobs
+        uses: actions/download-artifact@v2
+        with:
+          name: env-vars
+      - name: Trigger sending success email to author
+        if: env.WORKFLOW_CONCLUSION == 'success'
+        run: |
+          source ./.env-vars
+          wget -d -v -O/dev/null --tries=10 --timeout=15 --waitretry=30 --read-timeout=20 --retry-connrefused 'https://nodemcu-build.com/hook.php?event=success&recipient='${X_EMAIL//+/%2B}'&branch='$X_BRANCH'&modules='$X_MODULES'&artifacts='${file_name_float},${file_name_integer}
+      - name: Trigger sending failure email to author
+        if: env.WORKFLOW_CONCLUSION == 'failure'
+        run: |
+          source ./.env-vars
+          wget -d -v -O/dev/null --tries=10 --timeout=15 --waitretry=30 --read-timeout=20 --retry-connrefused 'https://nodemcu-build.com/hook.php?event=failure&recipient='${X_EMAIL//+/%2B}
+      - name: Send mail to myself
+        if: env.WORKFLOW_CONCLUSION == 'failure'
+        uses: dawidd6/action-send-mail@v2
+        with:
+          server_address: asmtp.mail.hostpoint.ch
+          server_port: 465
+          username: ${{ secrets.EMAIL_USERNAME }}
+          password: ${{ secrets.EMAIL_PASSWORD }}
+          subject: NodeMCU custom build failed
+          body: ${{ github.job }} job in worflow ${{ github.workflow }} of ${{ github.repository }} has ${{ job.status }}
+          to: info@nodemcu-build.com
+          from: GitHub Actions
