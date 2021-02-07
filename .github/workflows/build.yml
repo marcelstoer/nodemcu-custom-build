@@ -20,6 +20,12 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.8'
+      - name: Install Python dependencies
+        run: python -m pip install --upgrade pip
       - name: Install APT dependencies
         run: sudo apt install python-serial srecord gperf
       - name: Log the build config
@@ -30,6 +36,12 @@ jobs:
       # Idea: https://github.com/actions/starter-workflows/issues/68#issuecomment-642514933
       - name: Prepare environment variables
         run: ./export-env-vars.sh
+      - name: Upload artifact '.env-vars'
+        uses: actions/upload-artifact@v2
+        with:
+          name: env-vars
+          path: ./.env-vars
+          retention-days: 5
       - name: Trigger sending the start-build email
         run: |
           source ./.env-vars
@@ -68,12 +80,6 @@ jobs:
         with:
           name: bin-folder
           path: nodemcu-firmware/bin
-          retention-days: 5
-      - name: Upload artifact '.env-vars'
-        uses: actions/upload-artifact@v2
-        with:
-          name: env-vars
-          path: ./.env-vars
           retention-days: 5
 
   upload:
