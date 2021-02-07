@@ -4,5 +4,5 @@ set -e
 
 echo "Running 'install' for ESP8266"
 (
-  echo "Nothing to do here"
+  python -m pip install pyserial
 )
