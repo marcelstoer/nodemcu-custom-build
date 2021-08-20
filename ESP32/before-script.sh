@@ -32,10 +32,11 @@ echo "Running 'before_script' for ESP32"
   fi
 
   # ---------------------------------------------------------------------------
-  # set FatFS i.e. enable the SDMMC module in case the user forgot
+  # set FatFS and also enable the SDMMC module in case the user forgot
   # ---------------------------------------------------------------------------
   if [ "${X_FATFS_ENABLED}" == "true" ]; then
     echo "Enabling FatFS/SDMMC"
+    sed -ri "s/(CONFIG_BUILD_FATFS=).{0,1}/\1y/" sdkconfig
     sed -ri "s/(CONFIG_NODEMCU_CMODULE_SDMMC=).{0,1}/\1y/" sdkconfig
   fi
 
