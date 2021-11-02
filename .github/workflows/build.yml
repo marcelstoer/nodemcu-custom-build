@@ -54,7 +54,7 @@ jobs:
       - name: Clone NodeMCU repo
         run: |
           source ./.env-vars
-          git clone --depth=1 --branch=$X_BRANCH --recursive git://github.com/nodemcu/nodemcu-firmware.git nodemcu-firmware
+          git clone --depth=1 --branch=$X_BRANCH --recursive https://github.com/nodemcu/nodemcu-firmware nodemcu-firmware
           ls -alrt
           cd nodemcu-firmware
           ls -altr
