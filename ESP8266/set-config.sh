@@ -7,9 +7,11 @@
 #  LUA_FLASH_STORE                >0                      Y           Y
 #  SPIFFS_FIXED_LOCATION          >0                      Y           Y
 #  SPIFFS_MAX_FILESYSTEM_SIZE     >0                      Y           Y
+#  X_SPIFFS_SIZE_1M_BOUNDARY    "true"                                Y
 #  BUILD_FATFS                  "true"                                Y
 #  DEVELOP_VERSION              "true"                                Y
 #  SSL_ENABLED                  "true"                                Y
+#  LUA_INIT_STRING
 #
 set -e
 
@@ -22,7 +24,7 @@ fi
 
 if [ -n "${X_SPIFFS_FIXED_LOCATION}" ] && [ "${X_SPIFFS_FIXED_LOCATION}" != "0" ]; then
   printf "SPIFFS location offset = %s\\n" "${X_SPIFFS_FIXED_LOCATION}"
-  sed "s!^\\(#define SPIFFS_FIXED_LOCATION\\).*!\\1 ${X_SPIFFS_FIXED_LOCATION}!" user_config.h > user_config.h.new;
+  sed "s!^\s*\\(#define SPIFFS_FIXED_LOCATION\\).*!\\1 ${X_SPIFFS_FIXED_LOCATION}!" user_config.h > user_config.h.new;
   mv user_config.h.new user_config.h;
 fi
 
@@ -32,11 +34,19 @@ if [ -n "${X_SPIFFS_MAX_FILESYSTEM_SIZE}" ] && [ "${X_SPIFFS_MAX_FILESYSTEM_SIZE
   mv user_config.h.new user_config.h;
 fi
 
+if [ ! -z "${LUA_INIT_STRING}" ]; then
+  printf "LUA_INIT_STRING = %s\\n" "${LUA_INIT_STRING}"
+  sed "s!^//\\(#define LUA_INIT_STRING\\).*!\\1 ${LUA_INIT_STRING}!" user_config.h > user_config.h.new;
+  mv user_config.h.new user_config.h;
+fi
+
 # What is carried in the following variables is the sed replacement expression.
 # It makes all #defines commented by default.
 declare       fatfs="//#\\1"
 declare       debug="//#\\1"
 declare         ssl="//#\\1"
+declare    spiffs1m="//#\\1"
+
 
 if [ "${X_DEBUG_ENABLED}" == "true" ]; then
   echo "Enabling debug mode"
@@ -53,10 +63,16 @@ if [ "${X_SSL_ENABLED}" == "true" ]; then
   ssl="#\\1"
 fi
 
+if [ "${X_SPIFFS_SIZE_1M_BOUNDARY}" == "true" ]; then
+  echo "Enabling SPIFFS 1M boundary"
+  spiffs1m="#\\1"
+fi
+
 # Do sed via temp file for macOS compatability
 sed -e "s!^.*\\(define *BUILD_FATFS\\).*!$fatfs!" \
     -e "s!^.*\\(define *CLIENT_SSL_ENABLE\\).*!$ssl!" \
     -e "s!^.*\\(define *DEVELOP_VERSION\\).*!$debug!" \
+    -e "s!^.*\\(define *SPIFFS_SIZE_1M_BOUNDARY\\).*!$spiffs1m!" \
     user_config.h > user_config.h.new;
 mv user_config.h.new user_config.h;
 

@@ -1,31 +1,32 @@
 #!/bin/env bash
 
+# current script dir
+declare -r SCRIPT_DIR="$( cd $( dirname $0 ) && pwd )"
+
 set -e
 
-echo "Running 'before_script' for ESP8266"
-(
-  SCRIPT_DIR=$GITHUB_WORKSPACE/ESP8266
-
+_main() {
+  echo "Running 'before_script' for ESP8266"
   # dig in and modify those config files
-  cd app/include || exit
+  cd app/include || { echo "expected but missing $(pwd)/app/include" && return 1 ; }
 
   # replace modules in user_modules.h by the selected ones
-  "$SCRIPT_DIR"/set-modules.sh
+  "${SCRIPT_DIR}"/set-modules.sh
   # set defines in user_config.h according to X_* variables
-  "$SCRIPT_DIR"/set-config.sh
+  "${SCRIPT_DIR}"/set-config.sh
   # replace fonts in u8g_config.h by the selected ones
-  "$SCRIPT_DIR"/set-fonts.sh
+  "${SCRIPT_DIR}"/set-fonts.sh
   # set I2C/SPI displays in u8g_config.h and ucg_config.h
-  "$SCRIPT_DIR"/set-displays.sh
+  "${SCRIPT_DIR}"/set-displays.sh
   # replace version strings in user_version.h
-  "$SCRIPT_DIR"/set-version.sh
+  "${SCRIPT_DIR}"/set-version.sh
 
-  cat user_modules.h
-  cat user_config.h
-  cat u8g*.h
-  cat ucg_config.h
-  cat user_version.h
+  # cat user_modules.h
+  # cat user_config.h
+  # cat u8g*.h
+  # cat ucg_config.h
+  # cat user_version.h
+}
 
-  # back to where we came from
-  cd "$GITHUB_WORKSPACE" || exit
-)
+# subshell due to "cd" command inside
+( _main )
