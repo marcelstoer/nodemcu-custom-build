@@ -46,8 +46,14 @@ EOF
   _exp_if_exists repository X_REPO
   _exp_if_exists lua X_LUA
   _exp_if_exists lua-init X_LUA_INIT_STRING
+  _exp_if_exists lua-modules X_LUA_MODULES
 } 
 
-_exp > ./.env-vars
+declare outFile=./.env-vars
+if [ "xx" != "x${1}x" ] ; then
+  outFile="$1"
+fi
 
-cat ./.env-vars
+_exp > ${outFile}
+
+cat ${outFile}

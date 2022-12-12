@@ -1,14 +1,13 @@
-#!/bin/env bash
+#!/bin/bash
 
 # current script dir
 declare -r SCRIPT_DIR="$( cd $( dirname $0 ) && pwd )"
 
 set -e
 
-_main() {
-  echo "Running 'before_script' for ESP8266"
+_set_headers() {
   # dig in and modify those config files
-  cd app/include || { echo "expected but missing $(pwd)/app/include" && return 1 ; }
+  cd app/include || { echo "[ERR] : expected but missing $(pwd)/app/include" && return 1 ; }
 
   # replace modules in user_modules.h by the selected ones
   "${SCRIPT_DIR}"/set-modules.sh
@@ -20,6 +19,15 @@ _main() {
   "${SCRIPT_DIR}"/set-displays.sh
   # replace version strings in user_version.h
   "${SCRIPT_DIR}"/set-version.sh
+}
+
+_main() {
+  echo "Running 'before_script' for ESP8266"
+
+  ( _set_headers ) || return 1
+
+  # prepare local/{lua,fs} folders out of lua_modules
+  "${SCRIPT_DIR}"/set-lua-modules.sh
 
   # cat user_modules.h
   # cat user_config.h
@@ -29,4 +37,4 @@ _main() {
 }
 
 # subshell due to "cd" command inside
-( _main )
+_main
