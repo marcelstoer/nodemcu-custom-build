@@ -18,25 +18,25 @@ set -e
 #if env var exists and is not "0" then overwrite default
 if [ -n "${X_LUA_FLASH_STORE}" ] && [ "${X_LUA_FLASH_STORE}" != "0" ]; then
   printf "Enabling LFS, size = %s\\n" "${X_LUA_FLASH_STORE}"
-  sed -e "s!^//\\(#define LUA_FLASH_STORE\\).*!\\1 ${X_LUA_FLASH_STORE}!" user_config.h > user_config.h.new;
+  sed -e "s!^.*#define LUA_FLASH_STORE .*!#define LUA_FLASH_STORE ${X_LUA_FLASH_STORE}!" user_config.h > user_config.h.new;
   mv user_config.h.new user_config.h;
 fi
 
 if [ -n "${X_SPIFFS_FIXED_LOCATION}" ] && [ "${X_SPIFFS_FIXED_LOCATION}" != "0" ]; then
   printf "SPIFFS location offset = %s\\n" "${X_SPIFFS_FIXED_LOCATION}"
-  sed "s!^\s*\\(#define SPIFFS_FIXED_LOCATION\\).*!\\1 ${X_SPIFFS_FIXED_LOCATION}!" user_config.h > user_config.h.new;
+  sed "s!^.*#define SPIFFS_FIXED_LOCATION .*!#define SPIFFS_FIXED_LOCATION ${X_SPIFFS_FIXED_LOCATION}!" user_config.h > user_config.h.new;
   mv user_config.h.new user_config.h;
 fi
 
 if [ -n "${X_SPIFFS_MAX_FILESYSTEM_SIZE}" ] && [ "${X_SPIFFS_MAX_FILESYSTEM_SIZE}" != "0" ]; then
   printf "SPIFFS size = %s\\n" "${X_SPIFFS_MAX_FILESYSTEM_SIZE}"
-  sed "s!^//\\(#define SPIFFS_MAX_FILESYSTEM_SIZE\\).*!\\1 ${X_SPIFFS_MAX_FILESYSTEM_SIZE}!" user_config.h > user_config.h.new;
+  sed "s!^.*#define SPIFFS_MAX_FILESYSTEM_SIZE.*!#define SPIFFS_MAX_FILESYSTEM_SIZE ${X_SPIFFS_MAX_FILESYSTEM_SIZE}!" user_config.h > user_config.h.new;
   mv user_config.h.new user_config.h;
 fi
 
-if [ ! -z "${LUA_INIT_STRING}" ]; then
-  printf "LUA_INIT_STRING = %s\\n" "${LUA_INIT_STRING}"
-  sed "s!^//\\(#define LUA_INIT_STRING\\).*!\\1 ${LUA_INIT_STRING}!" user_config.h > user_config.h.new;
+if [ ! -z "${X_LUA_INIT_STRING}" ]; then
+  printf "LUA_INIT_STRING = %s\\n" "${X_LUA_INIT_STRING}"
+  sed "s!^.*#define LUA_INIT_STRING .*!#define LUA_INIT_STRING \x22${X_LUA_INIT_STRING}\x22!" user_config.h > user_config.h.new;
   mv user_config.h.new user_config.h;
 fi
 
