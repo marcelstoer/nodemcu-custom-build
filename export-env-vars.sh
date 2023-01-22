@@ -47,6 +47,10 @@ EOF
   _exp_if_exists lua X_LUA
   _exp_if_exists lua-init X_LUA_INIT_STRING
   _exp_if_exists lua-modules X_LUA_MODULES
+
+  _exp_if_exists lwip-pbuf-pool-size X_LWIP_PBUF_POOL_SIZE
+  _exp_if_exists lwip-mem-size X_LWIP_MEM_SIZE
+  _exp_if_exists lwip-tcp-mss X_LWIP_TCP_MSS
 } 
 
 declare outFile=./.env-vars

@@ -19,6 +19,8 @@ _set_headers() {
   "${SCRIPT_DIR}"/set-displays.sh
   # replace version strings in user_version.h
   "${SCRIPT_DIR}"/set-version.sh
+  # replace LWIP settings in lwipopts.h
+  "${SCRIPT_DIR}"/set-lwip.sh
 }
 
 _main() {
