@@ -1,12 +1,13 @@
-#!/bin/bash
+#!/bin/bash -x
 
-_get_val() {
+_get_key_val() {
   local -r fName="$1" ; shift
+  grep -E "^${fName}=" build.config | cut -f 2- -d '='
+}
+
+_nvl() {
+  local -r val="$1" ; shift
   local -r defVal="$1" ; shift
-  _grp() {
-    grep -E "^${fName}=" build.config | cut -f 2- -d '='
-  }
-  local -r val="$( _grp )"
   if [ "xx" == "x${val}x" ] ; then
     echo "${defVal}"
   else
@@ -14,19 +15,44 @@ _get_val() {
   fi
 }
 
+_get_val_def() {
+  local -r fName="$1" ; shift
+  local -r defVal="$1" ; shift
+  local -r val="$( _get_key_val ${fName} )"
+  _nvl "${val}" "${defVal}"
+}
+
+_concat() {
+  local second=false
+  while read line ; do
+    if ${second} ; then 
+      echo -n ","
+    fi
+    echo -n "${line}"
+    second=true
+  done
+}
+
+_get_val() {
+  local -r fName="$1" ; shift
+  _get_key_val "${fName}" | _concat
+}
+
 _exp_if_exists() {
   local -r fName="$1" ; shift
   local -r eName="$1" ; shift
   local -r val="$( _get_val ${fName} "$@" )"
   if [ "xx" != "x${val}x" ] ; then
-    echo "export ${eName}='$( echo ${val} | sed "s/'/\\\\x27/g" )'"
+    cat<<EOF
+export ${eName}='$( echo ${val} | sed "s/'/\\\\x27/g" )'
+EOF
   fi
 }
 
 _exp() {
   local -r X_MODULES=$( _get_val modules )
   cat <<EOF
-export USER_PROLOG='$(                    _get_val prolog 'built on nodemcu-build.com provided by frightanic.com' )'
+export USER_PROLOG='$(                    _get_val_def prolog 'built on nodemcu-build.com provided by frightanic.com' )'
 export X_EMAIL=$(                         _get_val email )
 export X_BRANCH='$(                       _get_val branch )'
 export X_MODULES='${X_MODULES}'
