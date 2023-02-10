@@ -1,4 +1,4 @@
-#!/bin/bash -x
+#!/bin/bash
 
 _get_key_val() {
   local -r fName="$1" ; shift
