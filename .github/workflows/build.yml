@@ -67,19 +67,13 @@ jobs:
           key: ${{ runner.os }}
       - name: Run install.sh
         run: |
-          source ./.env-vars
-          cd nodemcu-firmware
-          if [ "$X_BRANCH" = "dev-esp32" ]; then bash "$GITHUB_WORKSPACE"/ESP32/install.sh; else bash "$GITHUB_WORKSPACE"/ESP8266/install.sh; fi
+          "${GITHUB_WORKSPACE}"/run.sh -install
       - name: Run before-script.sh
         run: |
-          source ./.env-vars
-          cd nodemcu-firmware
-          if [ "$X_BRANCH" = "dev-esp32" ]; then bash "$GITHUB_WORKSPACE"/ESP32/before-script.sh; else bash "$GITHUB_WORKSPACE"/ESP8266/before-script.sh; fi
+          "${GITHUB_WORKSPACE}"/run.sh -before
       - name: Run script.sh
         run: |
-          source ./.env-vars
-          cd nodemcu-firmware
-          if [ "$X_BRANCH" = "dev-esp32" ]; then bash "$GITHUB_WORKSPACE"/ESP32/script.sh; else bash "$GITHUB_WORKSPACE"/ESP8266/script.sh; fi
+          "${GITHUB_WORKSPACE}"/run.sh -script
       - name: Upload artifacts in 'nodemcu-firmware/bin'
         uses: actions/upload-artifact@v2
         with:

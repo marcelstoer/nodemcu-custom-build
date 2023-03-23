@@ -34,3 +34,5 @@
 
 # Debug files
 *.dSYM/
+
+.env-vars
