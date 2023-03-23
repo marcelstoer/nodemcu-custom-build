@@ -52,6 +52,7 @@ EOF
 _exp() {
   local -r X_MODULES=$( _get_val modules )
   cat <<EOF
+export X_BRANCH_NATURE=$(                 echo $( _get_val branch ) | grep -q esp32 && echo esp32 || echo esp8266 )
 export USER_PROLOG='$(                    _get_val_def prolog 'built on nodemcu-build.com provided by frightanic.com' )'
 export X_EMAIL=$(                         _get_val email )
 export X_BRANCH='$(                       _get_val branch )'
