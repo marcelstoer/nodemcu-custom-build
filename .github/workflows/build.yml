@@ -69,17 +69,17 @@ jobs:
         run: |
           source ./.env-vars
           cd nodemcu-firmware
-          if [ "$X_BRANCH" = "dev-esp32" ]; then bash "$GITHUB_WORKSPACE"/ESP32/install.sh; else bash "$GITHUB_WORKSPACE"/ESP8266/install.sh; fi
+          if [ "$X_BRANCH" = "dev-esp32-idf3-final" ]; then bash "$GITHUB_WORKSPACE"/ESP32/install.sh; else bash "$GITHUB_WORKSPACE"/ESP8266/install.sh; fi
       - name: Run before-script.sh
         run: |
           source ./.env-vars
           cd nodemcu-firmware
-          if [ "$X_BRANCH" = "dev-esp32" ]; then bash "$GITHUB_WORKSPACE"/ESP32/before-script.sh; else bash "$GITHUB_WORKSPACE"/ESP8266/before-script.sh; fi
+          if [ "$X_BRANCH" = "dev-esp32-idf3-final" ]; then bash "$GITHUB_WORKSPACE"/ESP32/before-script.sh; else bash "$GITHUB_WORKSPACE"/ESP8266/before-script.sh; fi
       - name: Run script.sh
         run: |
           source ./.env-vars
           cd nodemcu-firmware
-          if [ "$X_BRANCH" = "dev-esp32" ]; then bash "$GITHUB_WORKSPACE"/ESP32/script.sh; else bash "$GITHUB_WORKSPACE"/ESP8266/script.sh; fi
+          if [ "$X_BRANCH" = "dev-esp32-idf3-final" ]; then bash "$GITHUB_WORKSPACE"/ESP32/script.sh; else bash "$GITHUB_WORKSPACE"/ESP8266/script.sh; fi
       - name: Upload artifacts in 'nodemcu-firmware/bin'
         uses: actions/upload-artifact@v2
         with:
