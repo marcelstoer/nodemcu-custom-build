@@ -29,11 +29,12 @@ jobs:
       - name: Prepare environment variables
         run: ./export-env-vars.sh
       - name: Upload artifact '.env-vars'
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: env-vars
           path: ./.env-vars
           retention-days: 5
+          include-hidden-files: true
       - name: Trigger sending the start-build email
         run: |
           source ./.env-vars
@@ -81,7 +82,7 @@ jobs:
           cd nodemcu-firmware
           if [ "$X_BRANCH" = "dev-esp32-idf3-final" ]; then bash "$GITHUB_WORKSPACE"/ESP32/script.sh; else bash "$GITHUB_WORKSPACE"/ESP8266/script.sh; fi
       - name: Upload artifacts in 'nodemcu-firmware/bin'
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: bin-folder
           path: nodemcu-firmware/bin
@@ -92,11 +93,11 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - name: Download artifacts 'nodemcu-firmware/bin' from build job
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           name: bin-folder
       - name: Download artifact '.env-vars' from build job
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           name: env-vars
       - name: Archive binaries on nodemcu-build.com
@@ -111,11 +112,13 @@ jobs:
           curl --connect-timeout 10 --max-time 120 --retry 5 --retry-delay 10 -F token=$TOKEN -F file=@$file_name_float https://nodemcu-build.com/archiver.php
           curl --connect-timeout 10 --max-time 120 --retry 5 --retry-delay 10 -F token=$TOKEN -F file=@$file_name_integer https://nodemcu-build.com/archiver.php
       - name: Upload artifact '.env-vars'
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: env-vars
           path: ./.env-vars
           retention-days: 5
+          overwrite: true
+          include-hidden-files: true
 
   notify:
     needs: upload
@@ -125,7 +128,7 @@ jobs:
       # You can get conclusion via ${{ env.WORKFLOW_CONCLUSION }} # neutral, success, skipped, cancelled, timed_out, action_required, failure
       - uses: technote-space/workflow-conclusion-action@v2
       - name: Download artifact '.env-vars' from build and upload jobs
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           name: env-vars
       - name: Trigger sending success email to author
