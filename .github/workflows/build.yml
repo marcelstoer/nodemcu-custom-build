@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
       - name: Log the build config
         run: cat build.config
       # When you run a script it gets its own shell and its own environment, which disappear again as soon as the
@@ -45,7 +45,7 @@ jobs:
           echo "python_version=3.8" >> $GITHUB_ENV
           if [ "$X_BRANCH" = "1.5.4.1-final" ]; then echo "python_version=2.7" >> $GITHUB_ENV; fi
       - name: Setup Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ env.python_version }}
       - name: Install Python dependencies
@@ -60,7 +60,7 @@ jobs:
           cd nodemcu-firmware
           ls -altr
       - name: Cache the 'cache' dir
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         env:
           cache-name: cache-artifacts
         with:
