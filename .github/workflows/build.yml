@@ -125,19 +125,17 @@ jobs:
     runs-on: ubuntu-22.04
     if: always()
     steps:
-      # You can get conclusion via ${{ env.WORKFLOW_CONCLUSION }} # neutral, success, skipped, cancelled, timed_out, action_required, failure
-      - uses: technote-space/workflow-conclusion-action@v2
       - name: Download artifact '.env-vars' from build and upload jobs
         uses: actions/download-artifact@v4
         with:
           name: env-vars
       - name: Trigger sending success email to author
-        if: env.WORKFLOW_CONCLUSION == 'success'
+        if: needs.upload.result == 'success'
         run: |
           source ./.env-vars
           wget -d -v -O/dev/null --tries=10 --timeout=15 --waitretry=30 --read-timeout=20 --retry-connrefused 'https://nodemcu-build.com/hook.php?event=success&recipient='${X_EMAIL//+/%2B}'&branch='$X_BRANCH'&modules='$X_MODULES'&artifacts='${file_name_float},${file_name_integer}
       - name: Trigger sending failure email to author
-        if: env.WORKFLOW_CONCLUSION == 'failure'
+        if: needs.upload.result != 'success'
         run: |
           source ./.env-vars
           wget -d -v -O/dev/null --tries=10 --timeout=15 --waitretry=30 --read-timeout=20 --retry-connrefused 'https://nodemcu-build.com/hook.php?event=failure&recipient='${X_EMAIL//+/%2B}
